@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardController">
+   <children>
+      <Pane prefHeight="63.0" prefWidth="811.0">
+         <children>
+            <Text layoutX="14.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello," />
+            <Text layoutX="14.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Text>
+            <Button layoutX="729.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: red;" text="Logout &gt;" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </Pane>
+      <TabPane layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="811.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab closable="false" text="Appointments">
+               <content>
+                  <Pane prefWidth="923.0">
+                     <children>
+                        <Text layoutX="523.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From" />
+                        <DatePicker editable="false" layoutX="551.0" layoutY="28.0" prefHeight="26.0" prefWidth="100.0" promptText="Today" />
+                        <Text layoutX="683.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" />
+                        <DatePicker layoutX="697.0" layoutY="27.0" prefHeight="26.0" prefWidth="100.0" promptText="Onwards" />
+                        <Text fx:id="appointmentsCountText" layoutX="14.0" layoutY="16.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are () scheduled appointments" />
+                        <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openAppointmentForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <TableView fx:id="appointmentsTableView" layoutY="62.0" prefHeight="400.0" prefWidth="811.0">
+                          <columns>
+                              <TableColumn fx:id="appointmentDateColumn" prefWidth="75.0" text="Date" />
+                              <TableColumn fx:id="appointmentTimeColumn" prefWidth="75.0" text="Time" />
+                              <TableColumn fx:id="appointmentCustomerColumn" prefWidth="202.8000030517578" text="Customer Name" />
+                              <TableColumn fx:id="appointmentServicesColumn" prefWidth="219.5999755859375" text="Services" />
+                              <TableColumn fx:id="appointmentCreatedColumn" prefWidth="119.5999755859375" text="Created by" />
+                              <TableColumn fx:id="appointmentEmployeePositionColumn" prefWidth="120.0" text="Position" />
+                          </columns>
+                        </TableView>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </Pane>
+               </content>
+          </Tab>
+          <Tab text="Services">
+      
+              <content>
+                  <Pane prefWidth="923.0">
+                      <children>
+                          <Text layoutX="523.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From" />
+                          <DatePicker editable="false" layoutX="551.0" layoutY="28.0" prefHeight="26.0" prefWidth="100.0" promptText="Today" />
+                          <Text layoutX="683.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" />
+                          <DatePicker layoutX="697.0" layoutY="27.0" prefHeight="26.0" prefWidth="100.0" promptText="Onwards" />
+                          <Text fx:id="appointmentsCountText1" layoutX="14.0" layoutY="16.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are () scheduled appointments" />
+                          <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openAppointmentForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                              <font>
+                                  <Font name="System Bold" size="12.0" />
+                              </font>
+                          </Button>
+                          <TableView fx:id="appointmentsTableView1" layoutY="62.0" prefHeight="400.0" prefWidth="811.0">
+                              <columns>
+                                  <TableColumn fx:id="appointmentDateColumn1" prefWidth="75.0" text="Date" />
+                                  <TableColumn fx:id="appointmentTimeColumn1" prefWidth="75.0" text="Time" />
+                                  <TableColumn fx:id="appointmentCustomerColumn1" prefWidth="202.8000030517578" text="Customer Name" />
+                                  <TableColumn fx:id="appointmentServicesColumn1" prefWidth="219.5999755859375" text="Services" />
+                                  <TableColumn fx:id="appointmentCreatedColumn1" prefWidth="119.5999755859375" text="Created by" />
+                                  <TableColumn fx:id="appointmentEmployeePositionColumn1" prefWidth="120.0" text="Position" />
+                              </columns>
+                          </TableView>
+                      </children>
+                      <padding>
+                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                      </padding>
+                  </Pane>
+              </content>
+          </Tab>
+            <Tab text="Products" />
+        </tabs>
+      </TabPane>
+   </children>
+</Pane>
