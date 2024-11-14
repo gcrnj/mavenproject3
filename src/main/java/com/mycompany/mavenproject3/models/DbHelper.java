@@ -1,6 +1,7 @@
 package com.mycompany.mavenproject3.models;
 
 import com.mycompany.mavenproject3.utils.PasswordUtils;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -144,6 +145,28 @@ public class DbHelper {
         return services; // Return the list of services
     }
 
+    public static List<Service> getServicesByName(String serviceName) {
+        List<Service> services = new ArrayList<>();
+        String sql = "SELECT * FROM " + Service.TABLE_NAME +
+                " WHERE " + Service.COL_SERVICE_NAME + " LIKE ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%" + serviceName + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            // Loop through the result set and create Service objects
+            while (resultSet.next()) {
+                Service service = new Service(resultSet);
+                services.add(service); // Add the Service object to the list
+            }
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+        }
+
+        return services; // Return the list of services
+    }
+
     // Method to retrieve all products
     public List<Product> getProducts() {
         List<Product> products = new ArrayList<>();
@@ -202,13 +225,13 @@ public class DbHelper {
     }
 
     public static String createService(String serviceName, double price, String description, String wheelsAvailable, boolean isAvailable) {
-        String sql = "INSERT INTO " + Service.TABLE_NAME + " (ServiceName, Price, Description, Wheels, IsAvilable) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + Service.TABLE_NAME + " (ServiceName, Price, Description, Wheels, IsAvailable) VALUES (?, ?, ?, ?, ?)";
         String error = null;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, serviceName);
             preparedStatement.setDouble(2, price);
-            preparedStatement.setString(3, description);    
+            preparedStatement.setString(3, description);
             preparedStatement.setString(4, wheelsAvailable);
             preparedStatement.setBoolean(5, isAvailable);
 

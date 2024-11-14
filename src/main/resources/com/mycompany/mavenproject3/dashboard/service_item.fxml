@@ -8,15 +8,19 @@
 
 <VBox onMouseClicked="#basta" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.ServiceItemController">
    <children>
-      <HBox fx:id="backgroundHBox">
+      <HBox fx:id="backgroundHBox" style="-fx-background-radius: 5; -fx-border-radius: 5;">
          <children>
             <VBox style="-fx-background-radius: 5;">
                <children>
-                  <Text fx:id="serviceNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Service Name" />
+                  <Text fx:id="serviceNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Service Name">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Text>
+                  <Text fx:id="wheelsText" layoutX="10.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wheels:: 2, 4, 5, 6" />
                   <Text fx:id="descriptionText" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
                </children>
             </VBox>
-            <Button mnemonicParsing="false" text="⋮">
+            <Button fx:id="optionsButton" mnemonicParsing="false" text="⋮">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>

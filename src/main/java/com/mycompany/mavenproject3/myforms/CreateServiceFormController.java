@@ -21,6 +21,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -61,6 +62,7 @@ public class CreateServiceFormController {
             stage.setScene(scene);
             stage.setTitle("Create Service Form");
             stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);  // Make stage2 modal
             stage.show();  // Show the new window
         } catch (IOException e) {
             e.printStackTrace();
@@ -121,8 +123,8 @@ public class CreateServiceFormController {
             String error = DbHelper.createService(
                     serviceNameTextField.getText(),
                     Double.parseDouble(priceTextField.getText()),
-                    wheelsAvailableTextField.getText(),
                     descriptionTextArea.getText(),
+                    wheelsAvailableTextField.getText(),
                     isAvailableCheckBox.isSelected()
             );
             if (error != null) {

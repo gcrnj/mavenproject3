@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardController">
+<Pane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardController">
    <children>
       <Pane prefHeight="63.0" prefWidth="811.0">
          <children>
@@ -44,6 +50,9 @@
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <TableView fx:id="appointmentsTableView" layoutY="62.0" prefHeight="400.0" prefWidth="811.0">
                           <columns>
@@ -72,10 +81,13 @@
                           <Text layoutX="683.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" />
                           <DatePicker layoutX="697.0" layoutY="27.0" prefHeight="26.0" prefWidth="100.0" promptText="Onwards" />
                           <Text fx:id="appointmentsCountText1" layoutX="14.0" layoutY="16.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are () scheduled appointments" />
-                          <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openAppointmentForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                          <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openServicesForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
                               <font>
                                   <Font name="System Bold" size="12.0" />
                               </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                           </Button>
                           <TableView fx:id="appointmentsTableView1" layoutY="62.0" prefHeight="400.0" prefWidth="811.0">
                               <columns>

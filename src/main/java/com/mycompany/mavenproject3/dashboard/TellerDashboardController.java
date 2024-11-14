@@ -117,6 +117,9 @@ public class TellerDashboardController implements Refreshable {
     @FXML
     private void openServicesForm() {
         CreateServiceFormController.startNewScene(this);
+        stage.setOpacity(0.5);
+        stage.setIconified(true);
+
     }
 
     @Override
