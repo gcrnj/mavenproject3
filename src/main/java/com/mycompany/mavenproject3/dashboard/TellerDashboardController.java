@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +24,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -44,8 +46,16 @@ public class TellerDashboardController implements Refreshable {
     public TableView<ServiceAppointment> appointmentsTableView;
     @FXML
     public TableColumn<ServiceAppointment, String> appointmentDateColumn, appointmentTimeColumn, appointmentCustomerColumn, appointmentServicesColumn, appointmentCreatedColumn, appointmentEmployeePositionColumn;
+
     @FXML
-    public Text appointmentsCountText;
+    public TableView<Service> serviceTableView;
+    @FXML
+    public TableColumn<Service, String> serviceNameColumn, servicePriceColumn, serviceWheelsColumn, descriptionColumn;
+    @FXML
+    public TableColumn<Service, Boolean> isAvailableColumn;
+
+    @FXML
+    public Text appointmentsCountText, servicesCountText;
 
     public static void startNewScene() throws IOException {
         // Load the new FXML for the new window
@@ -75,15 +85,18 @@ public class TellerDashboardController implements Refreshable {
 
     }
 
+    private <T> ObservableList<T> getObservableList(List<T> list) {
+        ObservableList<T> observableAppointments = FXCollections.observableArrayList();
+        observableAppointments.addAll(list);
+        return observableAppointments;
+    }
+
     private void initAppointments() {
-        ObservableList<ServiceAppointment> observableAppointments = FXCollections.observableArrayList();
 
         List<ServiceAppointment> appointments = DbHelper.getServiceAppointments(); // Retrieve appointments
         System.out.println("Appointments: " + appointments.size());
         //
-        observableAppointments.clear();
-        observableAppointments.addAll(appointments);
-        appointmentsTableView.setItems(observableAppointments);
+        ObservableList<ServiceAppointment> observableAppointments = getObservableList(appointments);
         //
         appointmentDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAppointmentDateTime()));
         appointmentTimeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAppointmentDateTime()));
@@ -96,12 +109,26 @@ public class TellerDashboardController implements Refreshable {
         } else {
             appointmentsCountText.setText("There are {" + appointments.size() + "} scheduled appointments");
         }
-
+        appointmentsTableView.setItems(observableAppointments);
     }
 
     private void initServices() {
         List<Service> services = DbHelper.getServices(); // Retrieve appointments
+        System.out.println("Services: " + services.size());
+        //
+        ObservableList<Service> observableServices = getObservableList(services);
 
+        serviceNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getServiceName()));
+        servicePriceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrice() + ""));
+        serviceWheelsColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getWheels()));
+        isAvailableColumn.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isIsAvailable()));
+        descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+        if (observableServices.isEmpty()) {
+            servicesCountText.setText("There are NO scheduled appointments");
+        } else {
+            servicesCountText.setText("There are {" + observableServices.size() + "} services found");
+        }
+        serviceTableView.setItems(observableServices);
     }
 
     @FXML
@@ -117,9 +144,6 @@ public class TellerDashboardController implements Refreshable {
     @FXML
     private void openServicesForm() {
         CreateServiceFormController.startNewScene(this);
-        stage.setOpacity(0.5);
-        stage.setIconified(true);
-
     }
 
     @Override
@@ -129,7 +153,7 @@ public class TellerDashboardController implements Refreshable {
 
     @FXML
     public void logout() {
-        
+
     }
 
 }
