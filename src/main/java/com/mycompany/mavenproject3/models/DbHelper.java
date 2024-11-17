@@ -126,6 +126,45 @@ public class DbHelper {
         return customers; // Return the list of appointments
     }
 
+    public static String createCustomer(
+            String firstName,
+            String lastName,
+
+            String contactNumber,
+            String emailAddress,
+
+            Barangay barangay,
+            String houseNumber,
+            String street,
+            String building
+    ) {
+
+        String error = null;
+
+        String sql = "INSERT INTO " + Customer.TABLE_NAME + " values (?,?,  ?,?,  ?,?,?,?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+
+            preparedStatement.setString(3, contactNumber);
+            preparedStatement.setString(4, emailAddress);
+
+            preparedStatement.setInt(5, barangay.getBrgyId());
+            preparedStatement.setString(6, houseNumber);
+            preparedStatement.setString(7, street);
+            preparedStatement.setString(8, building);
+
+           preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+            error = e.getMessage();
+        }
+        return error; // Return the list of appointments
+    }
+
     public static List<Service> getServices() {
         List<Service> services = new ArrayList<>();
         String sql = "SELECT * FROM " + Service.TABLE_NAME; // SQL query to select all services
@@ -242,5 +281,75 @@ public class DbHelper {
         }
         return error; // Return whether the appointment was created successfully
     }
+
+    public static List<Province> getProvinces() {
+        List<Province> provinces = new ArrayList<>();
+        String sql = "SELECT * FROM " + Province.TABLE_NAME; // SQL query to select all provinces
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            // Loop through the result set and create Province objects
+            while (resultSet.next()) {
+                Province province = new Province(resultSet); // Assuming Province constructor takes ResultSet
+                provinces.add(province); // Add the Province object to the list
+            }
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+        }
+
+        return provinces; // Return the list of provinces
+    }
+
+    public static List<Municipality> getMunicipalities(int provinceId) {
+        List<Municipality> municipalities = new ArrayList<>();
+        String sql = "SELECT m.*, p.* FROM " + Municipality.TABLE_NAME + " m " +
+                "JOIN " + Province.TABLE_NAME + " p ON m.ProvinceID = p.ProvinceID " +
+                "WHERE m.ProvinceID = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, provinceId); // Set the provinceId parameter
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                // Loop through the result set and create Municipality objects
+                while (resultSet.next()) {
+                    Municipality municipality = new Municipality(resultSet); // Assuming Municipality constructor takes ResultSet
+                    municipalities.add(municipality); // Add the Municipality object to the list
+                }
+            }
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+        }
+        return municipalities; // Return the list of municipalities
+    }
+
+    public static List<Barangay> getBarangays(int municipalityId) {
+        List<Barangay> barangays = new ArrayList<>();
+        String sql = "SELECT b.*, m.MunicipalityName, p.ProvinceName, p.ProvinceID " +
+                "FROM Barangays b " +
+                "JOIN Municipalities m ON b.MunicipalityID = m.MunicipalityID " +
+                "JOIN Provinces p ON m.ProvinceID = p.ProvinceID " +
+                "WHERE b.MunicipalityID = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, municipalityId); // Set the municipalityId parameter
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                // Loop through the result set and create Barangay objects
+                while (resultSet.next()) {
+                    Barangay barangay = new Barangay(resultSet); // Assuming Barangay constructor takes ResultSet
+                    barangays.add(barangay); // Add the Barangay object to the list
+                }
+            }
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+        }
+
+        return barangays; // Return the list of barangays
+    }
+
+
 
 }
