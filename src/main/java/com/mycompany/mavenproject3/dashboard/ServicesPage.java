@@ -13,27 +13,28 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-abstract public class ServicesPage implements Refreshable {
+public interface ServicesPage extends Refreshable {
 
-    // Corrected method signatures with correct return types
-    public abstract TableView<Service> getServiceTableView();
+    // Abstract method signatures
+    TableView<Service> getServiceTableView();
 
-    public abstract TableColumn<Service, String> getServiceNameColumn();
+    TableColumn<Service, String> getServiceNameColumn();
 
-    public abstract TableColumn<Service, String> getServicePriceColumn();
+    TableColumn<Service, String> getServicePriceColumn();
 
-    public abstract TableColumn<Service, String> getServiceWheelsColumn();
+    TableColumn<Service, String> getServiceWheelsColumn();
 
-    public abstract TableColumn<Service, String> getServiceDescriptionColumn();
+    TableColumn<Service, String> getServiceDescriptionColumn();
 
-    public abstract TableColumn<Service, Boolean> getIsAvailableColumn();
+    TableColumn<Service, Boolean> getIsAvailableColumn();
 
-    public abstract Text getServicesCountText();
+    Text getServicesCountText();
 
-    protected void loadServices() {
-        List<Service> services = DbHelper.getServices(); // Retrieve appointments
+    // Default method for concrete logic
+    default void loadServices() {
+        List<Service> services = DbHelper.getServices(); // Retrieve services
         System.out.println("Services: " + services.size());
-        //
+
         ObservableList<Service> observableServices = Util.getObservableList(services);
 
         getServiceNameColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getServiceName()));
@@ -41,6 +42,7 @@ abstract public class ServicesPage implements Refreshable {
         getServiceWheelsColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getWheels()));
         getIsAvailableColumn().setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isIsAvailable()));
         getServiceDescriptionColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+
         if (observableServices.isEmpty()) {
             getServicesCountText().setText("There are NO scheduled appointments");
         } else {
@@ -49,10 +51,11 @@ abstract public class ServicesPage implements Refreshable {
         getServiceTableView().setItems(observableServices);
     }
 
+    // Override from Refreshable
     @Override
-    public void refresh() {
+    default void refresh() {
         loadServices();
         System.out.println("2");
-
     }
 }
+

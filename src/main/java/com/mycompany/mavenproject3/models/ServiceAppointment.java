@@ -7,7 +7,7 @@ package com.mycompany.mavenproject3.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author GNew
@@ -30,6 +30,9 @@ public class ServiceAppointment {
     private final Service service;
     private final Timestamp appointmentDateTime;
     private final String status;
+
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
 
     public ServiceAppointment(ResultSet resultSet, boolean originalTableName) throws SQLException {
         this(
@@ -66,9 +69,18 @@ public class ServiceAppointment {
         return serviceID;
     }
 
-    public String getAppointmentDateTime() {
-        return appointmentDateTime.toLocalDateTime().toLocalDate().toString();
+    public String getDateTime() {
+        return appointmentDateTime.toLocalDateTime().toString();
     }
+
+    public String getDate() {
+        return appointmentDateTime.toLocalDateTime().format(dateFormatter);
+    }
+
+    public String getTime() {
+        return appointmentDateTime.toLocalDateTime().format(timeFormatter);
+    }
+
 
     public Employee getEmployee() {
         return employee;

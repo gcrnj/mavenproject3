@@ -31,7 +31,7 @@ public class AppointmentItem {
 
         // Initialize the appointment details
         appointmentCustomerName.setText(appointment.getCustomer().getFullName());
-        appointmentDate.setText(appointment.getAppointmentDateTime().toString());
+        appointmentDate.setText(appointment.getDateTime().toString());
 
         // Optionally add an action for the button
         appointmentViewButton.setOnAction(event -> viewAppointmentDetails());

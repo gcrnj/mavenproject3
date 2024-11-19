@@ -28,7 +28,7 @@ import javafx.stage.Stage;
  *
  * @author GNew
  */
-public class TellerDashboardControllerPage extends ServicesPage implements Refreshable  {
+public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, Refreshable  {
 
 //    @FXML
 //    public Text userName, userPosition, date;
@@ -68,7 +68,7 @@ public class TellerDashboardControllerPage extends ServicesPage implements Refre
     @FXML
     public void initialize() {
         initUpperDetails();
-        initAppointments();
+        loadAppointments();
         loadServices();
     }
 
@@ -79,33 +79,6 @@ public class TellerDashboardControllerPage extends ServicesPage implements Refre
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
 //        date.setText(dateFormat.format(new Date()));
 
-    }
-
-    private <T> ObservableList<T> getObservableList(List<T> list) {
-        ObservableList<T> observableAppointments = FXCollections.observableArrayList();
-        observableAppointments.addAll(list);
-        return observableAppointments;
-    }
-
-    private void initAppointments() {
-
-        List<ServiceAppointment> appointments = DbHelper.getServiceAppointments(); // Retrieve appointments
-        System.out.println("Appointments: " + appointments.size());
-        //
-        ObservableList<ServiceAppointment> observableAppointments = getObservableList(appointments);
-        //
-        appointmentDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAppointmentDateTime()));
-        appointmentTimeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAppointmentDateTime()));
-        appointmentCustomerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getFullName()));
-        appointmentServicesColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getService().getServiceName()));
-        appointmentCreatedColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmployee().getFullName()));
-        appointmentEmployeePositionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmployee().getPosition().getPositionName()));
-        if (appointments.isEmpty()) {
-            appointmentsCountText.setText("There are NO scheduled appointments");
-        } else {
-            appointmentsCountText.setText("There are {" + appointments.size() + "} scheduled appointments");
-        }
-        appointmentsTableView.setItems(observableAppointments);
     }
 
     @FXML
@@ -170,4 +143,48 @@ public class TellerDashboardControllerPage extends ServicesPage implements Refre
     }
 
     // End for override in Services
+
+
+    // Start for override in Appointments
+
+    @Override
+    public TableView<ServiceAppointment> getAppointmentsTableView() {
+        return appointmentsTableView;
+    }
+
+    @Override
+    public TableColumn<ServiceAppointment, String> getAppointmentDateColumn() {
+        return appointmentDateColumn;
+    }
+
+    @Override
+    public TableColumn<ServiceAppointment, String> getAppointmentTimeColumn() {
+        return appointmentTimeColumn;
+    }
+
+    @Override
+    public TableColumn<ServiceAppointment, String> getAppointmentCustomerColumn() {
+        return appointmentCustomerColumn;
+    }
+
+    @Override
+    public TableColumn<ServiceAppointment, String> getAppointmentServicesColumn() {
+        return appointmentServicesColumn;
+    }
+
+    @Override
+    public TableColumn<ServiceAppointment, String> getAppointmentCreatedColumn() {
+        return appointmentCreatedColumn;
+    }
+
+    @Override
+    public TableColumn<ServiceAppointment, String> getAppointmentEmployeePositionColumn() {
+        return appointmentEmployeePositionColumn;
+    }
+
+    @Override
+    public Text getAppointmentsCountText() {
+        return appointmentsCountText;
+    }
+    // End for overrides in Appointments
 }
