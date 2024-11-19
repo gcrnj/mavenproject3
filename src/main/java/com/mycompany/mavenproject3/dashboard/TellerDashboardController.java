@@ -101,7 +101,7 @@ public class TellerDashboardController implements Refreshable {
         appointmentDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAppointmentDateTime()));
         appointmentTimeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAppointmentDateTime()));
         appointmentCustomerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getFullName()));
-        appointmentServicesColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getServiceAppointmentID() + ""));
+        appointmentServicesColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getService().getServiceName()));
         appointmentCreatedColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmployee().getFullName()));
         appointmentEmployeePositionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmployee().getPosition().getPositionName()));
         if (appointments.isEmpty()) {
@@ -138,7 +138,7 @@ public class TellerDashboardController implements Refreshable {
 
     @FXML
     private void openAppointmentForm() {
-        CreateAppointmentFormController.startNewScene();
+        CreateAppointmentFormController.startNewScene(this);
     }
 
     @FXML

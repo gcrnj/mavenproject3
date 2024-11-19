@@ -29,12 +29,16 @@ public class Employee {
     private Position position;
 
     public Employee(ResultSet resultSet) throws SQLException {
+        this(resultSet, true);
+    }
+
+    public Employee(ResultSet resultSet, boolean originalColumnName) throws SQLException {
         this(
                 resultSet.getInt(Employee.COL_EMPLOYEE_ID),
-                resultSet.getString(Employee.COL_FIRST_NAME),
-                resultSet.getString(Employee.COL_LAST_NAME),
-                resultSet.getString(Employee.COL_CONTACT_NUMBER),
-                resultSet.getString(Employee.COL_EMAIL),
+                originalColumnName ? resultSet.getString(Employee.COL_FIRST_NAME) : resultSet.getString("EmployeeFirstName"),
+                originalColumnName ? resultSet.getString(Employee.COL_LAST_NAME)  : resultSet.getString("EmployeeLastName"),
+                originalColumnName ? resultSet.getString(Employee.COL_CONTACT_NUMBER) : resultSet.getString("EmployeeContactNumber"),
+                originalColumnName ? resultSet.getString(Employee.COL_EMAIL) : resultSet.getString("EmployeeEmail"),
                 new Position(resultSet)
         );
     }

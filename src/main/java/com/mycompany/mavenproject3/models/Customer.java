@@ -27,12 +27,16 @@ public class Customer {
     private String building;
 
     public Customer(ResultSet resultSet) throws SQLException {
+        this(resultSet, true);
+    }
+
+    public Customer(ResultSet resultSet, boolean originalColumnName) throws SQLException {
         this(
                 resultSet.getInt(Customer.COL_CUSTOMER_ID),
-                resultSet.getString(Customer.COL_FIRST_NAME),
-                resultSet.getString(Customer.COL_LAST_NAME),
-                resultSet.getString(Customer.COL_CONTACT_NUMBER),
-                resultSet.getString(Customer.COL_EMAIL),
+                originalColumnName ? resultSet.getString(Customer.COL_FIRST_NAME) : resultSet.getString("CustomerFirstName"),
+                originalColumnName ? resultSet.getString(Customer.COL_LAST_NAME) : resultSet.getString("CustomerLastName"),
+                originalColumnName ? resultSet.getString(Customer.COL_CONTACT_NUMBER) : resultSet.getString("CustomerContactNumber"),
+                originalColumnName ? resultSet.getString(Customer.COL_EMAIL) : resultSet.getString("CustomerEmail"),
                 resultSet.getInt(Customer.COL_BRGY_ID),
                 resultSet.getString(Customer.COL_HOUSE_NUMBER),
                 resultSet.getString(Customer.COL_STREET),

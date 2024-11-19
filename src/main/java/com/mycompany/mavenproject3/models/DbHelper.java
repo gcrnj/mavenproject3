@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,16 +92,24 @@ public class DbHelper {
 
     public static List<ServiceAppointment> getServiceAppointments() {
         List<ServiceAppointment> appointments = new ArrayList<>();
-        String sql = "SELECT sa.*, e.*, c.* "
+        String sql = "SELECT sa.*, "
+                + "e.EmployeeID AS EmployeeID, e.FirstName AS EmployeeFirstName, e.LastName AS EmployeeLastName, e.ContactNumber AS EmployeeContactNumber, e.Email AS EmployeeEmail, "
+                + "c.BarangayID, c.HouseNumber, c.Street, c.Building, "
+                + "c.CustomerID AS CustomerID, c.FirstName AS CustomerFirstName, c.LastName AS CustomerLastName, c.ContactNumber AS CustomerContactNumber, c.Email AS CustomerEmail, "
+                + "p.*, s.* "
                 + "FROM " + ServiceAppointment.TABLE_NAME + " sa "
                 + "JOIN " + Employee.TABLE_NAME + " e ON sa.EmployeeID = e.EmployeeID "
-                + "JOIN " + Customer.TABLE_NAME + " c ON sa.CustomerID = c.CustomerID";
+                + "JOIN " + Customer.TABLE_NAME + " c ON sa.CustomerID = c.CustomerID "
+                + "JOIN " + Position.TABLE_NAME + " p ON e.PositionID = p.PositionID "
+                + "JOIN " + Service.TABLE_NAME + " s ON sa.ServiceID = s.ServiceID ";
+
+
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
 
             // Loop through the result set and create Appointment objects
             while (resultSet.next()) {
-                ServiceAppointment appointment = new ServiceAppointment(resultSet);
+                ServiceAppointment appointment = new ServiceAppointment(resultSet, false);
                 appointments.add(appointment); // Add the Appointment object to the list
             }
         } catch (SQLException e) {
@@ -114,6 +124,33 @@ public class DbHelper {
         String sql = "SELECT * from " + Customer.TABLE_NAME;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            // Loop through the result set and create Appointment objects
+            while (resultSet.next()) {
+                customers.add(new Customer(resultSet)); // Add the Appointment object to the list
+            }
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+        }
+        return customers; // Return the list of appointments
+    }
+
+    public static List<Customer> getCustomers(String customerDetail) {
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT * from " + Customer.TABLE_NAME +
+                " WHERE " + Customer.COL_FIRST_NAME + " LIKE ? "
+                + " OR " + Customer.COL_LAST_NAME + " LIKE ?"
+                + " OR " + Customer.COL_EMAIL + " LIKE ?"
+                + " OR " + Customer.COL_CONTACT_NUMBER + " LIKE ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, '%' + customerDetail + '%');
+            preparedStatement.setString(2, '%' + customerDetail + '%');
+            preparedStatement.setString(3, '%' + customerDetail + '%');
+            preparedStatement.setString(4, '%' + customerDetail + '%');
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             // Loop through the result set and create Appointment objects
             while (resultSet.next()) {
@@ -155,7 +192,7 @@ public class DbHelper {
             preparedStatement.setString(7, street);
             preparedStatement.setString(8, building);
 
-           preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             // Handle exceptions
@@ -226,16 +263,20 @@ public class DbHelper {
         return products; // Return the list of products
     }
 
-    public static String createAppointment(String customerName, String contactNumber, int serviceId, String appointmentDate) {
-        String sql = "INSERT INTO " + ServiceAppointment.TABLE_NAME + " (CustomerName, contactNumber, serviceId, appointmentDate) VALUES (?, ?, ?, ?)";
+    public static String createAppointment(int serviceId, int customerId, int employeeId, LocalDateTime dateTime) {
+        String scheduled = AppointmentStatus.SCHEDULED.name();
+        String sql = "INSERT INTO " + ServiceAppointment.TABLE_NAME +
+                " (ServiceID, CustomerID, EmployeeID, AppointmentDateTime, Status)" +
+                " VALUES (?, ?, ?, ?, ?)";
         String error = null;
         try {
-
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, customerName);
-            preparedStatement.setString(2, contactNumber);
-            preparedStatement.setInt(3, serviceId);
-            preparedStatement.setString(4, appointmentDate);
+            preparedStatement.setInt(1, serviceId);
+            preparedStatement.setInt(2, customerId);
+            preparedStatement.setInt(3, employeeId);
+            preparedStatement.setString(4, dateTime.format(formatter));
+            preparedStatement.setString(5, scheduled);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             error = e.getMessage();
@@ -349,7 +390,6 @@ public class DbHelper {
 
         return barangays; // Return the list of barangays
     }
-
 
 
 }

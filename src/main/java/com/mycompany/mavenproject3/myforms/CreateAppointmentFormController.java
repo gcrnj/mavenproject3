@@ -7,21 +7,28 @@ package com.mycompany.mavenproject3.myforms;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.jfoenix.controls.JFXTextArea;
+import com.mycompany.mavenproject3.dashboard.CustomerItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceItemController;
+import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.Customer;
 import com.mycompany.mavenproject3.models.DbHelper;
+import com.mycompany.mavenproject3.models.LocalCache;
 import com.mycompany.mavenproject3.models.Service;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
@@ -37,6 +44,7 @@ import javafx.util.converter.LocalDateStringConverter;
  */
 public class CreateAppointmentFormController {
 
+    Refreshable refreshable;
     @FXML
     public VBox customersVbox;
     @FXML
@@ -46,13 +54,24 @@ public class CreateAppointmentFormController {
     @FXML
     private DatePicker serviceDatePicker;
     @FXML
-    private Text customerNameText, dateText, timeText;
+    private Text customerNameText, dateText, timeText, servicesErrorText;
+    @FXML
+    private ComboBox<String> hourTimePicker, minutePicker, amOrPmPicker;
 
-    List<Service> selectedServices = new ArrayList<>();
+    ObservableList<Service> selectedServices = FXCollections.observableArrayList();
+    SimpleObjectProperty<Customer> selectedCustomer = new SimpleObjectProperty<>();
+    SimpleObjectProperty<LocalDate> selectedDate = new SimpleObjectProperty<>();
+    SimpleObjectProperty<String> selectedHour = new SimpleObjectProperty<>();
+    SimpleObjectProperty<String> selectedMinute = new SimpleObjectProperty<>();
+    SimpleObjectProperty<String> selectedAmPm = new SimpleObjectProperty<>();
 
-    // Define the ChangeListener
-    private final ChangeListener<String> textChangeListener = (observable, oldValue, newValue) -> {
+    // Define the ChangeListeners
+    private final ChangeListener<String> servicesTextChangeListener = (observable, oldValue, newValue) -> {
         reloadServicesList(newValue);
+    };
+
+    private final ChangeListener<String> customersTextChangeListener = (observable, oldValue, newValue) -> {
+        reloadCustomersList(newValue);
     };
 
     private void reloadServicesList(String serviceNameSearch) {
@@ -77,17 +96,9 @@ public class CreateAppointmentFormController {
                     servicesVBox.getChildren().add(root);
 
                     root.setOnMouseClicked(mouseEvent -> {
-                        Text currentSelectedText = new Text(service.getServiceName());
 
                         selectedServices.add(service);
-                        selectedServicesVBox.getChildren().add(currentSelectedText);
                         reloadServicesList(serviceNameSearch);
-
-                        currentSelectedText.setOnMouseClicked(event -> {
-                            selectedServices.remove(service);
-                            selectedServicesVBox.getChildren().remove(currentSelectedText);
-                            reloadServicesList(serviceSearchTextArea.getText());
-                        });
                     });
                 }
             } catch (IOException e) {
@@ -97,19 +108,47 @@ public class CreateAppointmentFormController {
 
     }
 
-    public static void startNewScene() {
+    private void reloadCustomersList(String customerSearch) {
+        customersVbox.getChildren().clear();
+        customersVbox.prefWidth(Double.MAX_VALUE);
+        List<Customer> customers = DbHelper.getCustomers(customerSearch);
+        for (Customer customer : customers) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/mavenproject3/dashboard/customer_item.fxml"));
+                Parent root = loader.load(); // Load and retrieve the root node
+                CustomerItemController controller = loader.getController();
+                controller.setCustomer(customer);
+                // root.prefWidth(330); // Set your desired fixed width, e.g., 300px
+                customersVbox.getChildren().add(root);
+
+                root.setOnMouseClicked(mouseEvent -> {
+                    // Select a customer
+                    selectedCustomer.setValue(customer);
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void startNewScene(Refreshable refreshable) {
         // Load the new FXML for the new window
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(CreateAppointmentFormController.class.getResource("create_appointment_form.fxml")));
-            // Create a new Stage (window)
+            // Create an FXMLLoader instance
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(CreateAppointmentFormController.class.getResource("create_appointment_form.fxml")));
+
+            // Load the FXML and retrieve the root element
+            Parent root = loader.load();            // Create a new Stage (window)
             Stage stage = new Stage();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Create Appointment Form");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);  // Make stage2 modal
-
             stage.show();  // Show the new window
+            CreateAppointmentFormController controller = loader.getController();
+            controller.refreshable = refreshable;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,14 +157,60 @@ public class CreateAppointmentFormController {
     @FXML
     public void initialize() {
         addListeners();
-        loadCustomers();
+        addObservers();
+        reloadCustomersList(customerSearchTextArea.getText());
         initDatePicker();
+    }
+
+    @FXML
+    private void onHourSelected() {
+        this.selectedHour.setValue(hourTimePicker.getValue());
+    }
+
+    @FXML
+    private void onMinuteSelected() {
+        this.selectedMinute.setValue(minutePicker.getValue());
+    }
+
+    @FXML
+    private void onAmPmSelected() {
+        this.selectedAmPm.setValue(amOrPmPicker.getValue());
+    }
+
+    private void addObservers() {
+        selectedCustomer.addListener((observable, oldValue, newValue) -> {
+            customerNameText.setText(
+                    newValue != null ? newValue.getFullName() : ""
+            );
+        });
+        selectedCustomer.addListener((observable, oldValue, newValue) -> {
+            customerNameText.setText(
+                    newValue != null ? newValue.getFullName() : ""
+            );
+        });
+        selectedServices.addListener((ListChangeListener.Change<? extends Service> change) -> {
+            while (change.next()) {
+
+                if (change.wasAdded()) {
+                    for (Service addedService : change.getAddedSubList()) {
+                        Text currentSelectedText = new Text(addedService.getServiceName());
+                        selectedServicesVBox.getChildren().add(currentSelectedText);
+
+                        currentSelectedText.setOnMouseClicked(event -> {
+                            // Remove from the list
+                            selectedServices.remove(addedService);
+                            selectedServicesVBox.getChildren().remove(currentSelectedText);
+                            reloadServicesList(serviceSearchTextArea.getText());
+                        });
+                    }
+                }
+            }
+        });
     }
 
     private void initDatePicker() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
         serviceDatePicker.setConverter(new LocalDateStringConverter(formatter, DateTimeFormatter.ISO_LOCAL_DATE));
-        serviceDatePicker.setValue(LocalDate.now()); // Set the initial value (today's date)
         serviceDatePicker.setDayCellFactory(datePicker1 -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
@@ -134,24 +219,74 @@ public class CreateAppointmentFormController {
                 setDisable(item.isBefore(LocalDate.now()));
             }
         });
+        // Add a listener to detect when the date is changed
+        serviceDatePicker.valueProperty().addListener((observable, oldValue, newValue)
+                -> {
+            selectedDate.setValue(newValue);
+            System.out.println("Selected date: " + newValue.format(formatter));
+        });
+        // Select date now
+        serviceDatePicker.setValue(LocalDate.now()); // Set the initial value (today's date)
     }
 
     private void addListeners() {
-        serviceSearchTextArea.textProperty().removeListener(textChangeListener);
-        serviceSearchTextArea.textProperty().addListener(textChangeListener);
-    }
+        customerSearchTextArea.textProperty().removeListener(customersTextChangeListener);
+        customerSearchTextArea.textProperty().addListener(customersTextChangeListener);
 
-    @FXML
-    public void loadCustomers() {
-        List<Customer> customers = DbHelper.getCustomers();
-        for (Customer customer : customers) {
-            customersVbox.getChildren().add(new Text(customer.getFullName()));
-        }
+        serviceSearchTextArea.textProperty().removeListener(servicesTextChangeListener);
+        serviceSearchTextArea.textProperty().addListener(servicesTextChangeListener);
     }
 
     @FXML
     public void openCreateCustomerForm() {
         System.out.println("openCreateCustomerForm");
         CreateCustomerController.startNewScene();
+    }
+
+    @FXML
+    public void saveButtonClick() {
+        // Validate
+
+        boolean isValid = true;
+
+        // Set error messages to indicate missing fields
+        if (selectedCustomer.getValue() == null) {
+            customerNameText.setText("Customer is required");
+            isValid = false;
+        }
+
+        if (selectedDate.getValue() == null) {
+            dateText.setText("Date is required");
+            isValid = false;
+        }
+
+        if (selectedHour.getValue() == null || selectedMinute.getValue() == null || selectedAmPm.getValue() == null) {
+            timeText.setText("Time is required");
+            isValid = false;
+        }
+
+        if (selectedServices.isEmpty()) {
+            servicesErrorText.setText("At least one service is required");
+            isValid = false;
+        }
+
+        if (isValid) {
+            int finalHour = Integer.parseInt(selectedHour.getValue());
+            if(selectedAmPm.getValue().equals("PM")) {
+                finalHour += 12;
+            }
+            // Add to db
+            String error = DbHelper.createAppointment(
+                    selectedServices.get(0).getServiceID(),
+                    selectedCustomer.getValue().getCustomerID(),
+                    LocalCache.getEmployee().getEmployeeID(),
+                    selectedDate.get().atTime(finalHour, Integer.parseInt(selectedMinute.getValue()))
+            );
+            if(error == null) {
+                // No error
+            } else {
+                // Show error
+            }
+        }
     }
 }
