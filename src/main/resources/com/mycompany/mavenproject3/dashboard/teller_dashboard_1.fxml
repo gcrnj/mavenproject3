@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardController">
+<Pane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage">
    <children>
       <Pane prefHeight="63.0" prefWidth="811.0">
          <children>
@@ -89,7 +89,7 @@
                                   <TableColumn fx:id="servicePriceColumn" prefWidth="110.0" text="Price" />
                                   <TableColumn fx:id="serviceWheelsColumn" prefWidth="162.0" text="Available for wheels" />
                                   <TableColumn fx:id="isAvailableColumn" prefWidth="103.20001220703125" text="Available" />
-                                  <TableColumn fx:id="descriptionColumn" prefWidth="278.8000183105469" text="Description" />
+                                  <TableColumn fx:id="serviceDescriptionColumn" prefWidth="278.8000183105469" text="Description" />
                               </columns>
                           </TableView>
                       </children>

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import com.jfoenix.controls.JFXTextArea;
 import com.mycompany.mavenproject3.dashboard.CustomerItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceItemController;
+import com.mycompany.mavenproject3.dashboard.ServicesPage;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.Customer;
 import com.mycompany.mavenproject3.models.DbHelper;
@@ -44,7 +45,7 @@ import javafx.util.converter.LocalDateStringConverter;
  */
 public class CreateAppointmentFormController {
 
-    Refreshable refreshable;
+    ServicesPage servicesPage;
     @FXML
     public VBox customersVbox;
     @FXML
@@ -132,7 +133,7 @@ public class CreateAppointmentFormController {
         }
     }
 
-    public static void startNewScene(Refreshable refreshable) {
+    public static void startNewScene(ServicesPage servicesPage) {
         // Load the new FXML for the new window
         try {
             // Create an FXMLLoader instance
@@ -148,7 +149,7 @@ public class CreateAppointmentFormController {
             stage.initModality(Modality.APPLICATION_MODAL);  // Make stage2 modal
             stage.show();  // Show the new window
             CreateAppointmentFormController controller = loader.getController();
-            controller.refreshable = refreshable;
+            controller.servicesPage = servicesPage;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -284,6 +285,7 @@ public class CreateAppointmentFormController {
             );
             if(error == null) {
                 // No error
+                servicesPage.refresh();
             } else {
                 // Show error
             }

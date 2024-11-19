@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="807.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardController">
+<GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="807.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="438.4000244140625" minWidth="10.0" prefWidth="259.8" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="789.4000091552734" minWidth="10.0" prefWidth="635.2" />

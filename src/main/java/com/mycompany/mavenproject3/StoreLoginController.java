@@ -1,6 +1,6 @@
 package com.mycompany.mavenproject3;
 
-import com.mycompany.mavenproject3.dashboard.TellerDashboardController;
+import com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage;
 import com.mycompany.mavenproject3.models.DbHelper;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class StoreLoginController {
@@ -59,7 +58,7 @@ public class StoreLoginController {
         // Validate user credentials
         if (login(username, password, userRole)) {
             // Assuming login is successful, proceed to the dashboard
-            TellerDashboardController.startNewScene();
+            TellerDashboardControllerPage.startNewScene();
             stage.close();
         } else {
             // Handle login failure (you could implement a dialog here)
