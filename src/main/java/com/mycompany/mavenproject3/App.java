@@ -1,5 +1,6 @@
 package com.mycompany.mavenproject3;
 
+import atlantafx.base.theme.PrimerDark;
 import com.mycompany.mavenproject3.models.DbHelper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
         StoreLoginController.startNewScene();
     }
 

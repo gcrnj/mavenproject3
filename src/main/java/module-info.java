@@ -5,6 +5,7 @@ module com.mycompany.mavenproject3 {
     requires java.sql; // Required for SQL operations
     requires jbcrypt; // Add this line to require the jbcrypt module
     requires com.jfoenix; // Add this line to include JFoenix
+    requires atlantafx.base;
 
     opens com.mycompany.mavenproject3 to javafx.fxml;
     exports com.mycompany.mavenproject3;
@@ -20,6 +21,5 @@ module com.mycompany.mavenproject3 {
     
     opens com.mycompany.mavenproject3.myforms to javafx.fxml;
     exports com.mycompany.mavenproject3.myforms to javafx.fxml;
-    
 
 }
