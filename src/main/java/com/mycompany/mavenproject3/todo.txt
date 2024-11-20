@@ -1,0 +1,45 @@
+Todo list
+All
+- Profile Pic
+- View Profile
+- Logout Button functionality
+
+- \Add Employee
+- \Appointments
+    - From and To filter
+    - Complete Edit and Delete option in table row when right-clicked
+    - Complete "Mark as Complete" if Scheduled
+    - Add "Mark as Canceled" if Scheduled
+    - \Create Appointments
+        - Added Services + and - buttons
+        - Fix UI
+- \Services
+    - Fix UI
+    - Add Edit, Delete and Set Available/Unavailable when right-clicked
+    - Remove From and To filters
+- \Products
+    - Create Product
+    - Sell Products with quantity
+- \Sales Page
+
+Teller
+- Employee (View own details only)
+- Appointments (Create, View, Edit, Delete)
+- Services (View)
+- Products (View)
+- Selling (Create, View)
+
+Manager
+- Employees (Create Teller only, View-Edit own details and teller details),
+- Appointments (Create, View, Edit, Delete)
+- Services (Create, View, Edit)
+- Products (Create, View, Edit)
+- Selling (Create, View, Edit, Delete/Void)
+
+Owner
+- Employees (Create, View and Edit all roles(Owner, Manager and Teller)),
+- Appointments (Create, View, Edit)
+- Services (Create, View, Edit)
+- Products (Create, View, Edit)
+- Selling (Create, View, Edit, Delete/Void)
+

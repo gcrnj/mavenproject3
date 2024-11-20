@@ -68,9 +68,9 @@
                                 </TableView>
                                 <HBox fx:id="appointmentStatusHBox" alignment="CENTER_LEFT" layoutX="83.0" layoutY="30.0" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="553.0">
                            <children>
-                              <CheckBox fx:id="scheduledCheckBox" mnemonicParsing="false" selected="true" text="Scheduled" />
-                              <CheckBox fx:id="completedCheckBox" mnemonicParsing="false" selected="true" text="Completed" />
-                              <CheckBox fx:id="canceledCheckBox" mnemonicParsing="false" selected="true" text="Canceled" />
+                              <CheckBox fx:id="scheduledCheckBox" mnemonicParsing="false" text="Scheduled" />
+                              <CheckBox fx:id="completedCheckBox" mnemonicParsing="false" text="Completed" />
+                              <CheckBox fx:id="canceledCheckBox" mnemonicParsing="false" text="Canceled" />
                            </children></HBox>
                             </children>
                             <padding>

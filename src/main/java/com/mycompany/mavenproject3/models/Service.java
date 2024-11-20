@@ -17,7 +17,7 @@ public class Service {
     private String serviceName;
     private String description;
     private double price;
-    private String wheels;
+    private int wheels;
     private boolean isAvailable;
 
     // Constructor to initialize Service from ResultSet
@@ -26,7 +26,7 @@ public class Service {
         this.serviceName = resultSet.getString(COL_SERVICE_NAME);
         this.description = resultSet.getString(COL_DESCRIPTION);
         this.price = resultSet.getDouble(COL_PRICE);
-        this.wheels = resultSet.getString(COL_WHEELS);
+        this.wheels = resultSet.getInt(COL_WHEELS);
         this.isAvailable = resultSet.getBoolean(COL_IS_AVAILABLE);
     }
 
@@ -63,11 +63,11 @@ public class Service {
         this.price = price;
     }
 
-    public String getWheels() {
+    public int getWheels() {
         return wheels;
     }
 
-    public void setWheels(String wheels) {
+    public void setWheels(int wheels) {
         this.wheels = wheels;
     }
 

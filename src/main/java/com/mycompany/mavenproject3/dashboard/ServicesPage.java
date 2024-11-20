@@ -39,7 +39,7 @@ public interface ServicesPage extends Refreshable {
 
         getServiceNameColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getServiceName()));
         getServicePriceColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrice() + ""));
-        getServiceWheelsColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getWheels()));
+        getServiceWheelsColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getWheels() + ""));
         getIsAvailableColumn().setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isIsAvailable()));
         getServiceDescriptionColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
 

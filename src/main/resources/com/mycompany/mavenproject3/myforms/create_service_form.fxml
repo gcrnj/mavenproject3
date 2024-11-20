@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateServiceFormController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateServiceFormController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
@@ -38,11 +33,6 @@
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
-                  </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Separate by comma for multiple wheels. E,g, 2, 4, 6">
-                     <font>
-                        <Font name="System Italic" size="10.0" />
-                     </font>
                   </Text>
                   <TextField fx:id="wheelsAvailableTextField" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0" promptText="Leave blank for all" />
                   <Text fx:id="wheelsCountErrorText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="This field is required" visible="false">

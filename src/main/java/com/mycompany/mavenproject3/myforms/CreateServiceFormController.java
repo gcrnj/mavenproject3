@@ -7,9 +7,11 @@ package com.mycompany.mavenproject3.myforms;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.utils.TextFormatterUtil;
+
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -73,9 +75,10 @@ public class CreateServiceFormController {
     public void initialize() {
         System.out.println("here");
         priceTextField.setTextFormatter(TextFormatterUtil.doubleTextFormatter());
+        wheelsAvailableTextField.setTextFormatter(TextFormatterUtil.intTextFormatter());
     }
-    
-    public void setRefreshable(Refreshable refreshable){
+
+    public void setRefreshable(Refreshable refreshable) {
         this.refreshable = refreshable;
     }
 
@@ -88,7 +91,7 @@ public class CreateServiceFormController {
         String wheelsCountInput = wheelsAvailableTextField.getText();
         boolean isServiceNameError = serviceNameTextField.getText().isBlank();
         boolean isPriceError = priceTextField.getText().isBlank();
-        boolean isWheelsCountError = !wheelsCountInput.isBlank() && !pattern.matcher(wheelsCountInput).matches();
+        boolean isWheelsCountError = !wheelsCountInput.isBlank() && Integer.parseInt(wheelsAvailableTextField.getText()) <= 0;
 
         // Reset all error texts to hidden initially
         serviceNameErrorText.setVisible(false);
