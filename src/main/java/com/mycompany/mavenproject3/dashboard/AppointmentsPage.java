@@ -1,6 +1,7 @@
 package com.mycompany.mavenproject3.dashboard;
 
 import com.mycompany.mavenproject3.interfaces.Refreshable;
+import com.mycompany.mavenproject3.models.AppointmentStatus;
 import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.ServiceAppointment;
 import com.mycompany.mavenproject3.utils.Util;
@@ -12,7 +13,6 @@ import javafx.scene.text.Text;
 import java.util.List;
 
 public interface AppointmentsPage extends Refreshable {
-
 
 
     TableView<ServiceAppointment> getAppointmentsTableView();
@@ -51,40 +51,75 @@ public interface AppointmentsPage extends Refreshable {
             getAppointmentsCountText().setText("There are {" + appointments.size() + "} scheduled appointments");
         }
         getAppointmentsTableView().setItems(observableAppointments);
-        createOptions();
+        createOptions(observableAppointments); // Pass observableAppointments to createOptions
 
     }
 
-    private void createOptions() {
-
+    private void createOptions(ObservableList<ServiceAppointment> observableAppointments) {
         // Create the context menu
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem editOption = new MenuItem("Edit");
-        MenuItem deleteOption = new MenuItem("Delete");
-        contextMenu.getItems().addAll(editOption, deleteOption);
+
         getAppointmentsTableView().setRowFactory(tv -> {
             TableRow<ServiceAppointment> row = new TableRow<>();
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem editOption = new MenuItem("Edit");
+            MenuItem deleteOption = new MenuItem("Delete");
+            contextMenu.getItems().addAll(editOption, deleteOption);
+
+
+            MenuItem markAsCompletedOption = new MenuItem("Mark as Completed");
 
             // Show the context menu only for non-empty rows
             row.setOnContextMenuRequested(event -> {
                 if (!row.isEmpty()) {
+                    // Check if the current service appointment is active
+                    ServiceAppointment selectedItem = row.getItem();
+                    if (selectedItem != null && selectedItem.getStatus() == AppointmentStatus.SCHEDULED) { // Assuming isActive() is a method in ServiceAppointment
+                        contextMenu.getItems().add(markAsCompletedOption);
+                    } else {
+                        // Ensure the "Mark as Completed" option is not shown if the appointment is not active
+                        contextMenu.getItems().remove(markAsCompletedOption);
+                    }
                     row.getContextMenu().show(row, event.getScreenX(), event.getScreenY());
                 }
             });
 
-            // Attach the context menu to the row
-            row.setContextMenu(contextMenu);
-
             // Handle menu item actions
             editOption.setOnAction(e -> {
-                String selectedItem = row.getItem().getService().getServiceName();
-                System.out.println("Edit selected: " + selectedItem);
+                ServiceAppointment selectedItem = row.getItem();
+                if (selectedItem != null) {
+                    System.out.println("Edit selected: " + selectedItem.getService().getServiceName());
+                } else {
+                    System.out.println("No item selected for Edit");
+                }
             });
 
             deleteOption.setOnAction(e -> {
                 ServiceAppointment selectedItem = row.getItem();
-                getAppointmentsTableView().getItems().remove(selectedItem);
-                System.out.println("Deleted: " + selectedItem);
+                if (selectedItem != null) {
+                    observableAppointments.remove(selectedItem); // Remove from observableAppointments
+                    System.out.println("Deleted: " + selectedItem);
+                } else {
+                    System.out.println("No item selected for Delete");
+                }
+            });
+
+            markAsCompletedOption.setOnAction(e -> {
+                ServiceAppointment selectedItem = row.getItem();
+                if (selectedItem != null) {
+                    // Update the status of the appointment to completed
+                    System.out.println("Marked as completed: " + selectedItem);
+                } else {
+                    System.out.println("No item selected for Mark as Completed");
+                }
+            });
+
+            // Attach the context menu to the row only when an item is set
+            row.itemProperty().addListener((obs, previousItem, currentItem) -> {
+                if (currentItem != null) {
+                    row.setContextMenu(contextMenu);
+                } else {
+                    row.setContextMenu(null);
+                }
             });
 
             return row;
@@ -93,6 +128,6 @@ public interface AppointmentsPage extends Refreshable {
 
     @Override
     default void refresh() {
-
+        loadAppointments();
     }
 }

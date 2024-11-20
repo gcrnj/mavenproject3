@@ -29,7 +29,7 @@ public class ServiceAppointment {
     private final Employee employee;
     private final Service service;
     private final Timestamp appointmentDateTime;
-    private final String status;
+    private final AppointmentStatus status;
 
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
@@ -42,11 +42,11 @@ public class ServiceAppointment {
                 new Employee(resultSet, originalTableName), // Assuming you have a constructor in Employee that takes an ID
                 new Service(resultSet),
                 resultSet.getTimestamp(COL_APPOINTMENT_DATETIME), // Use getTimestamp for DateTime values
-                resultSet.getString(COL_STATUS)
+                AppointmentStatus.valueOf(resultSet.getString(COL_STATUS))
         );
     }
 
-    public ServiceAppointment(int serviceAppointmentID, int serviceID, Customer customer, Employee employee, Service service, Timestamp appointmentDateTime, String status) {
+    public ServiceAppointment(int serviceAppointmentID, int serviceID, Customer customer, Employee employee, Service service, Timestamp appointmentDateTime, AppointmentStatus status) {
         this.serviceAppointmentID = serviceAppointmentID;
         this.serviceID = serviceID;
         this.customer = customer;
@@ -56,7 +56,7 @@ public class ServiceAppointment {
         this.status = status;
     }
 
-    public String getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 

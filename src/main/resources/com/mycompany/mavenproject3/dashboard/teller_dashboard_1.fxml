@@ -3,20 +3,22 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<Pane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage">
+<Pane prefHeight="583.0" prefWidth="969.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage">
    <children>
-      <Pane prefHeight="63.0" prefWidth="811.0">
+      <Pane prefHeight="63.0" prefWidth="969.0">
          <children>
-            <Text layoutX="14.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello," />
-            <Text layoutX="14.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+            <Text layoutX="79.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello," />
+            <Text fx:id="userNameText" layoutX="79.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
                <font>
                   <Font size="28.0" />
                </font>
             </Text>
-            <Button layoutX="729.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: red;" text="Logout &gt;" textFill="WHITE">
+            <Button layoutX="887.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: red;" text="Logout &gt;" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -27,9 +29,15 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <ImageView fx:id="profileImageView" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                <clip>
+                    <!-- Circular clipping shape -->
+                    <Circle fx:id="circle" centerX="25" centerY="25" radius="25" />
+                </clip>
+            </ImageView>
          </children>
       </Pane>
-      <TabPane layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="811.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="969.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab closable="false" text="Appointments">
                <content>
@@ -48,14 +56,14 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <TableView fx:id="appointmentsTableView" layoutY="62.0" prefHeight="400.0" prefWidth="811.0">
+                        <TableView fx:id="appointmentsTableView" layoutY="62.0" prefHeight="400.0" prefWidth="969.0">
                           <columns>
-                              <TableColumn fx:id="appointmentDateColumn" prefWidth="75.0" text="Date" />
-                              <TableColumn fx:id="appointmentTimeColumn" prefWidth="75.0" text="Time" />
-                              <TableColumn fx:id="appointmentCustomerColumn" prefWidth="202.8000030517578" text="Customer Name" />
-                              <TableColumn fx:id="appointmentServicesColumn" prefWidth="219.5999755859375" text="Services" />
-                              <TableColumn fx:id="appointmentCreatedColumn" prefWidth="119.5999755859375" text="Created by" />
-                              <TableColumn fx:id="appointmentEmployeePositionColumn" prefWidth="120.0" text="Position" />
+                              <TableColumn fx:id="appointmentDateColumn" prefWidth="150.3999878168106" text="Date" />
+                              <TableColumn fx:id="appointmentTimeColumn" minWidth="0.0" prefWidth="104.0" text="Time" />
+                              <TableColumn fx:id="appointmentCustomerColumn" prefWidth="239.00001525878906" text="Customer Name" />
+                              <TableColumn fx:id="appointmentServicesColumn" prefWidth="242.5999755859375" text="Services" />
+                              <TableColumn fx:id="appointmentCreatedColumn" prefWidth="124.4000244140625" text="Created by" />
+                              <TableColumn fx:id="appointmentEmployeePositionColumn" prefWidth="111.800048828125" text="Position" />
                           </columns>
                         </TableView>
                      </children>
@@ -83,13 +91,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                           </Button>
-                          <TableView fx:id="serviceTableView" layoutY="62.0" prefHeight="400.0" prefWidth="811.0">
+                          <TableView fx:id="serviceTableView" layoutY="62.0" prefHeight="400.0" prefWidth="969.0">
                               <columns>
-                                  <TableColumn fx:id="serviceNameColumn" prefWidth="153.20000302791595" text="Service Name" />
-                                  <TableColumn fx:id="servicePriceColumn" prefWidth="110.0" text="Price" />
-                                  <TableColumn fx:id="serviceWheelsColumn" prefWidth="162.0" text="Available for wheels" />
-                                  <TableColumn fx:id="isAvailableColumn" prefWidth="103.20001220703125" text="Available" />
-                                  <TableColumn fx:id="serviceDescriptionColumn" prefWidth="278.8000183105469" text="Description" />
+                                  <TableColumn fx:id="serviceNameColumn" prefWidth="234.19999849796295" text="Service Name" />
+                                  <TableColumn fx:id="servicePriceColumn" prefWidth="131.39999389648438" text="Price" />
+                                  <TableColumn fx:id="serviceWheelsColumn" prefWidth="205.80001831054688" text="Available for wheels" />
+                                  <TableColumn fx:id="isAvailableColumn" prefWidth="76.60000610351562" text="Available" />
+                                  <TableColumn fx:id="serviceDescriptionColumn" prefWidth="324.4000244140625" text="Description" />
                               </columns>
                           </TableView>
                       </children>

@@ -2,6 +2,7 @@ package com.mycompany.mavenproject3.dashboard;
 
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.DbHelper;
+import com.mycompany.mavenproject3.models.LocalCache;
 import com.mycompany.mavenproject3.models.Service;
 import com.mycompany.mavenproject3.models.ServiceAppointment;
 import com.mycompany.mavenproject3.myforms.CreateAppointmentFormController;
@@ -20,6 +21,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -48,6 +51,11 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     public TableColumn<Service, Boolean> isAvailableColumn;
 
     @FXML
+    ImageView profileImageView;
+    @FXML
+    Text userNameText;
+
+    @FXML
     public Text appointmentsCountText, servicesCountText;
 
     public static void startNewScene() throws IOException {
@@ -73,11 +81,12 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     }
 
     private void initUpperDetails() {
-//        userName.setText(LocalCache.getEmployee().getFirstName());
-//        userPosition.setText(LocalCache.getEmployee().getPosition().getPositionName());
+        userNameText.setText(LocalCache.getEmployee().getFirstName());
 
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
 //        date.setText(dateFormat.format(new Date()));
+        Image image = new Image(getClass().getResource("/images/abc.png").toExternalForm());
+        profileImageView.setImage(image);
 
     }
 

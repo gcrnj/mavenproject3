@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import com.mycompany.mavenproject3.dashboard.CustomerItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceItemController;
@@ -32,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -110,7 +110,7 @@ public class CreateAppointmentFormController {
     }
 
     private void reloadCustomersList(String customerSearch) {
-        customersVbox.getChildren().clear();
+        customersVbox.getChildren().remove(1, customersVbox.getChildren().size());
         customersVbox.prefWidth(Double.MAX_VALUE);
         List<Customer> customers = DbHelper.getCustomers(customerSearch);
         for (Customer customer : customers) {
@@ -122,10 +122,8 @@ public class CreateAppointmentFormController {
                 // root.prefWidth(330); // Set your desired fixed width, e.g., 300px
                 customersVbox.getChildren().add(root);
 
-                root.setOnMouseClicked(mouseEvent -> {
-                    // Select a customer
-                    selectedCustomer.setValue(customer);
-                });
+                root.setOnMouseClicked(mouseEvent -> selectedCustomer.setValue(customer));
+                controller.setOnClickListener(() -> selectedCustomer.setValue(customer));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -179,11 +177,6 @@ public class CreateAppointmentFormController {
     }
 
     private void addObservers() {
-        selectedCustomer.addListener((observable, oldValue, newValue) -> {
-            customerNameText.setText(
-                    newValue != null ? newValue.getFullName() : ""
-            );
-        });
         selectedCustomer.addListener((observable, oldValue, newValue) -> {
             customerNameText.setText(
                     newValue != null ? newValue.getFullName() : ""
