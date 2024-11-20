@@ -11,7 +11,7 @@
 
 <HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateAppointmentFormController">
     <children>
-        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="0.0">
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="564.0" prefWidth="283.0">
             <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Customer">
                     <font>

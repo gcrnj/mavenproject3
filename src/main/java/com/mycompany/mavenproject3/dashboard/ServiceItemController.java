@@ -38,12 +38,9 @@ public class ServiceItemController {
         wheelsText.setText("Wheels: " + service.getWheels());
         descriptionText.setText(service.getDescription());
 
-        String availableStyle = "-fx-background-color: lightblue;";
-        String unavailable = "-fx-background-color: lightblue;";
-        if (service.isIsAvailable()) {
-            backgroundHBox.setStyle(backgroundHBox.getStyle().replace(unavailable, "") + " -fx-background-color: lightblue;");
-        } else {
-            backgroundHBox.setStyle(backgroundHBox.getStyle().replace(availableStyle, "") + " -fx-background-color: lightgrey;");
+        String unavailable = "-fx-background-color: grey;";
+        if (!service.isIsAvailable()) {
+            backgroundHBox.setStyle(backgroundHBox.getStyle() + unavailable);
         }
     }
     

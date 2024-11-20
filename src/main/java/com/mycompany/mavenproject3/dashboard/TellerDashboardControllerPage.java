@@ -1,28 +1,27 @@
 package com.mycompany.mavenproject3.dashboard;
 
 import com.mycompany.mavenproject3.interfaces.Refreshable;
-import com.mycompany.mavenproject3.models.DbHelper;
-import com.mycompany.mavenproject3.models.LocalCache;
-import com.mycompany.mavenproject3.models.Service;
-import com.mycompany.mavenproject3.models.ServiceAppointment;
+import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.myforms.CreateAppointmentFormController;
 import com.mycompany.mavenproject3.myforms.CreateServiceFormController;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -31,7 +30,7 @@ import javafx.stage.Stage;
  *
  * @author GNew
  */
-public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, Refreshable  {
+public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, Refreshable {
 
 //    @FXML
 //    public Text userName, userPosition, date;
@@ -57,6 +56,27 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
 
     @FXML
     public Text appointmentsCountText, servicesCountText;
+
+    @FXML
+    HBox appointmentStatusHBox;
+
+    @FXML
+    CheckBox scheduledCheckBox, completedCheckBox, canceledCheckBox;
+
+    @Override
+    public CheckBox getScheduledCheckBox() {
+        return scheduledCheckBox;
+    }
+
+    @Override
+    public CheckBox getCompletedCheckBox() {
+        return completedCheckBox;
+    }
+
+    @Override
+    public CheckBox getCanceledCheckBox() {
+        return canceledCheckBox;
+    }
 
     public static void startNewScene() throws IOException {
         // Load the new FXML for the new window

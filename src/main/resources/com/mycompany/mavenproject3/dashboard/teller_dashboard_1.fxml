@@ -9,106 +9,112 @@
 <?import javafx.scene.text.*?>
 
 <Pane prefHeight="583.0" prefWidth="969.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage">
-   <children>
-      <Pane prefHeight="63.0" prefWidth="969.0">
-         <children>
-            <Text layoutX="79.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello," />
-            <Text fx:id="userNameText" layoutX="79.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
-               <font>
-                  <Font size="28.0" />
-               </font>
-            </Text>
-            <Button layoutX="887.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: red;" text="Logout &gt;" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <ImageView fx:id="profileImageView" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
-                <clip>
-                    <!-- Circular clipping shape -->
-                    <Circle fx:id="circle" centerX="25" centerY="25" radius="25" />
-                </clip>
-            </ImageView>
-         </children>
-      </Pane>
-      <TabPane layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="969.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab closable="false" text="Appointments">
-               <content>
-                  <Pane prefWidth="923.0">
-                     <children>
-                        <Text layoutX="523.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From" />
-                        <DatePicker editable="false" layoutX="551.0" layoutY="28.0" prefHeight="26.0" prefWidth="100.0" promptText="Today" />
-                        <Text layoutX="683.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" />
-                        <DatePicker layoutX="697.0" layoutY="27.0" prefHeight="26.0" prefWidth="100.0" promptText="Onwards" />
-                        <Text fx:id="appointmentsCountText" layoutX="14.0" layoutY="16.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are () scheduled appointments" />
-                        <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openAppointmentForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <TableView fx:id="appointmentsTableView" layoutY="62.0" prefHeight="400.0" prefWidth="969.0">
-                          <columns>
-                              <TableColumn fx:id="appointmentDateColumn" prefWidth="150.3999878168106" text="Date" />
-                              <TableColumn fx:id="appointmentTimeColumn" minWidth="0.0" prefWidth="104.0" text="Time" />
-                              <TableColumn fx:id="appointmentCustomerColumn" prefWidth="239.00001525878906" text="Customer Name" />
-                              <TableColumn fx:id="appointmentServicesColumn" prefWidth="242.5999755859375" text="Services" />
-                              <TableColumn fx:id="appointmentCreatedColumn" prefWidth="124.4000244140625" text="Created by" />
-                              <TableColumn fx:id="appointmentEmployeePositionColumn" prefWidth="111.800048828125" text="Position" />
-                          </columns>
-                        </TableView>
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </Pane>
-               </content>
-          </Tab>
-          <Tab text="Services">
-      
-              <content>
-                  <Pane prefWidth="923.0">
-                      <children>
-                          <Text layoutX="523.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From" />
-                          <DatePicker editable="false" layoutX="551.0" layoutY="28.0" prefHeight="26.0" prefWidth="100.0" promptText="Today" />
-                          <Text layoutX="683.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" />
-                          <DatePicker layoutX="697.0" layoutY="27.0" prefHeight="26.0" prefWidth="100.0" promptText="Onwards" />
-                          <Text fx:id="servicesCountText" layoutX="14.0" layoutY="16.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are () scheduled appointments" />
-                          <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openServicesForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
-                              <font>
-                                  <Font name="System Bold" size="12.0" />
-                              </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                          </Button>
-                          <TableView fx:id="serviceTableView" layoutY="62.0" prefHeight="400.0" prefWidth="969.0">
-                              <columns>
-                                  <TableColumn fx:id="serviceNameColumn" prefWidth="234.19999849796295" text="Service Name" />
-                                  <TableColumn fx:id="servicePriceColumn" prefWidth="131.39999389648438" text="Price" />
-                                  <TableColumn fx:id="serviceWheelsColumn" prefWidth="205.80001831054688" text="Available for wheels" />
-                                  <TableColumn fx:id="isAvailableColumn" prefWidth="76.60000610351562" text="Available" />
-                                  <TableColumn fx:id="serviceDescriptionColumn" prefWidth="324.4000244140625" text="Description" />
-                              </columns>
-                          </TableView>
-                      </children>
-                      <padding>
-                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                      </padding>
-                  </Pane>
-              </content>
-          </Tab>
-            <Tab text="Products" />
-        </tabs>
-      </TabPane>
-   </children>
+    <children>
+        <Pane prefHeight="63.0" prefWidth="969.0">
+            <children>
+                <Text layoutX="79.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello," />
+                <Text fx:id="userNameText" layoutX="79.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+                    <font>
+                        <Font size="28.0" />
+                    </font>
+                </Text>
+                <Button layoutX="887.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: red;" text="Logout &gt;" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+                <ImageView fx:id="profileImageView" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                    <clip>
+                        <!-- Circular clipping shape -->
+                        <Circle fx:id="circle" centerX="25" centerY="25" radius="25" />
+                    </clip>
+                </ImageView>
+            </children>
+        </Pane>
+        <TabPane layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="969.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab closable="false" text="Appointments">
+                    <content>
+                        <Pane prefWidth="923.0">
+                            <children>
+                                <Text layoutX="673.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From" />
+                                <DatePicker editable="false" layoutX="710.0" layoutY="13.0" prefHeight="26.0" prefWidth="100.0" promptText="Today" />
+                                <Text layoutX="833.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" />
+                                <DatePicker layoutX="856.0" layoutY="13.0" prefHeight="26.0" prefWidth="100.0" promptText="Onwards" />
+                                <Text fx:id="appointmentsCountText" layoutX="14.0" layoutY="16.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are () scheduled appointments" />
+                                <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openAppointmentForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                                <TableView fx:id="appointmentsTableView" layoutY="62.0" prefHeight="400.0" prefWidth="969.0">
+                                    <columns>
+                                        <TableColumn fx:id="appointmentDateColumn" prefWidth="150.3999878168106" text="Date" />
+                                        <TableColumn fx:id="appointmentTimeColumn" minWidth="0.0" prefWidth="104.0" text="Time" />
+                                        <TableColumn fx:id="appointmentCustomerColumn" prefWidth="239.00001525878906" text="Customer Name" />
+                                        <TableColumn fx:id="appointmentServicesColumn" prefWidth="242.5999755859375" text="Services" />
+                                        <TableColumn fx:id="appointmentCreatedColumn" prefWidth="124.4000244140625" text="Created by" />
+                                        <TableColumn fx:id="appointmentEmployeePositionColumn" prefWidth="111.800048828125" text="Position" />
+                                    </columns>
+                                </TableView>
+                                <HBox fx:id="appointmentStatusHBox" alignment="CENTER_LEFT" layoutX="83.0" layoutY="30.0" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="553.0">
+                           <children>
+                              <CheckBox fx:id="scheduledCheckBox" mnemonicParsing="false" selected="true" text="Scheduled" />
+                              <CheckBox fx:id="completedCheckBox" mnemonicParsing="false" selected="true" text="Completed" />
+                              <CheckBox fx:id="canceledCheckBox" mnemonicParsing="false" selected="true" text="Canceled" />
+                           </children></HBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </Pane>
+                    </content>
+                </Tab>
+                <Tab text="Services">
+
+                    <content>
+                        <Pane prefWidth="923.0">
+                            <children>
+                                <Text layoutX="523.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From" />
+                                <DatePicker editable="false" layoutX="551.0" layoutY="28.0" prefHeight="26.0" prefWidth="100.0" promptText="Today" />
+                                <Text layoutX="683.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" />
+                                <DatePicker layoutX="697.0" layoutY="27.0" prefHeight="26.0" prefWidth="100.0" promptText="Onwards" />
+                                <Text fx:id="servicesCountText" layoutX="14.0" layoutY="16.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are () scheduled appointments" />
+                                <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#openServicesForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                                <TableView fx:id="serviceTableView" layoutY="62.0" prefHeight="400.0" prefWidth="969.0">
+                                    <columns>
+                                        <TableColumn fx:id="serviceNameColumn" prefWidth="234.19999849796295" text="Service Name" />
+                                        <TableColumn fx:id="servicePriceColumn" prefWidth="131.39999389648438" text="Price" />
+                                        <TableColumn fx:id="serviceWheelsColumn" prefWidth="205.80001831054688" text="Available for wheels" />
+                                        <TableColumn fx:id="isAvailableColumn" prefWidth="76.60000610351562" text="Available" />
+                                        <TableColumn fx:id="serviceDescriptionColumn" prefWidth="324.4000244140625" text="Description" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </Pane>
+                    </content>
+                </Tab>
+                <Tab text="Products" />
+            </tabs>
+        </TabPane>
+    </children>
 </Pane>

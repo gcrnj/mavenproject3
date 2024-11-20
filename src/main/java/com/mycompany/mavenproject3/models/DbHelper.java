@@ -90,7 +90,11 @@ public class DbHelper {
         return isValidUser;
     }
 
-    public static List<ServiceAppointment> getServiceAppointments() {
+    public static List<ServiceAppointment> getServiceAppointments(
+            boolean scheduled,
+            boolean completed,
+            boolean canceled
+    ) {
         List<ServiceAppointment> appointments = new ArrayList<>();
         String sql = "SELECT sa.*, "
                 + "e.EmployeeID AS EmployeeID, e.FirstName AS EmployeeFirstName, e.LastName AS EmployeeLastName, e.ContactNumber AS EmployeeContactNumber, e.Email AS EmployeeEmail, "
@@ -103,7 +107,21 @@ public class DbHelper {
                 + "JOIN " + Position.TABLE_NAME + " p ON e.PositionID = p.PositionID "
                 + "JOIN " + Service.TABLE_NAME + " s ON sa.ServiceID = s.ServiceID ";
 
-
+        // Dynamically build the WHERE clause based on the flags
+        List<String> conditions = new ArrayList<>();
+        if (scheduled) {
+            conditions.add("sa.Status = 'SCHEDULED' ");
+        }
+        if (completed) {
+            conditions.add("sa.Status = 'COMPLETED' ");
+        }
+        if (canceled) {
+            conditions.add("sa.Status = 'CANCELED' ");
+        }
+        if (!conditions.isEmpty()) {
+            sql += "WHERE " + String.join(" OR ", conditions);
+        }
+        sql += ";";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -114,6 +132,7 @@ public class DbHelper {
             }
         } catch (SQLException e) {
             // Handle exceptions
+            System.out.println("SQL = " + sql);
             e.printStackTrace(); // For debugging
         }
         return appointments; // Return the list of appointments

@@ -78,33 +78,33 @@ public class CreateAppointmentFormController {
     private void reloadServicesList(String serviceNameSearch) {
         servicesVBox.getChildren().clear();
         servicesVBox.prefWidth(Double.MAX_VALUE);
-        if (!serviceNameSearch.isBlank()) {
-            List<Service> services = DbHelper.getServicesByName(serviceNameSearch);
-            List<Integer> selectedServiceIds = selectedServices.stream()
-                    .map(Service::getServiceID)
-                    .collect(Collectors.toList()); // Collect the stream into a List
+        List<Service> services = serviceNameSearch.isBlank() ?
+                DbHelper.getServices() : DbHelper.getServicesByName(serviceNameSearch);
 
-            services.removeIf(service -> selectedServiceIds.contains(service.getServiceID()));
+        List<Integer> selectedServiceIds = selectedServices.stream()
+                .map(Service::getServiceID)
+                .collect(Collectors.toList()); // Collect the stream into a List
 
-            try {
-                for (Service service : services) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/mavenproject3/dashboard/service_item.fxml"));
-                    Parent root = loader.load(); // Load and retrieve the root node
-                    ServiceItemController controller = loader.getController();
-                    controller.setService(service);
-                    controller.removeButton();
-                    root.prefWidth(330); // Set your desired fixed width, e.g., 300px
-                    servicesVBox.getChildren().add(root);
+        services.removeIf(service -> selectedServiceIds.contains(service.getServiceID()));
 
-                    root.setOnMouseClicked(mouseEvent -> {
+        try {
+            for (Service service : services) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/mavenproject3/dashboard/service_item.fxml"));
+                Parent root = loader.load(); // Load and retrieve the root node
+                ServiceItemController controller = loader.getController();
+                controller.setService(service);
+                controller.removeButton();
+                root.prefWidth(330); // Set your desired fixed width, e.g., 300px
+                servicesVBox.getChildren().add(root);
 
-                        selectedServices.add(service);
-                        reloadServicesList(serviceNameSearch);
-                    });
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                root.setOnMouseClicked(mouseEvent -> {
+
+                    selectedServices.add(service);
+                    reloadServicesList(serviceNameSearch);
+                });
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
@@ -122,8 +122,9 @@ public class CreateAppointmentFormController {
                 // root.prefWidth(330); // Set your desired fixed width, e.g., 300px
                 customersVbox.getChildren().add(root);
 
-                root.setOnMouseClicked(mouseEvent -> selectedCustomer.setValue(customer));
-                controller.setOnClickListener(() -> selectedCustomer.setValue(customer));
+                root.setOnMouseClicked(mouseEvent -> {
+                    selectedCustomer.set(customer);
+                });
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -159,6 +160,7 @@ public class CreateAppointmentFormController {
         addObservers();
         reloadCustomersList(customerSearchTextField.getText());
         initDatePicker();
+        reloadServicesList("");
     }
 
     @FXML
@@ -252,21 +254,27 @@ public class CreateAppointmentFormController {
         if (selectedDate.getValue() == null) {
             dateText.setText("Date is required");
             isValid = false;
+        } else {
+            dateText.setText("");
         }
 
         if (selectedHour.getValue() == null || selectedMinute.getValue() == null || selectedAmPm.getValue() == null) {
             timeText.setText("Time is required");
             isValid = false;
+        } else {
+            timeText.setText("");
         }
 
         if (selectedServices.isEmpty()) {
             servicesErrorText.setText("At least one service is required");
             isValid = false;
+        } else {
+            servicesErrorText.setText("");
         }
 
         if (isValid) {
             int finalHour = Integer.parseInt(selectedHour.getValue());
-            if(selectedAmPm.getValue().equals("PM")) {
+            if (selectedAmPm.getValue().equals("PM")) {
                 finalHour += 12;
             }
             // Add to db
@@ -276,7 +284,7 @@ public class CreateAppointmentFormController {
                     LocalCache.getEmployee().getEmployeeID(),
                     selectedDate.get().atTime(finalHour, Integer.parseInt(selectedMinute.getValue()))
             );
-            if(error == null) {
+            if (error == null) {
                 // No error
                 servicesPage.refresh();
             } else {

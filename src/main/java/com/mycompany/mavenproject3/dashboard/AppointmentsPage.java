@@ -5,12 +5,19 @@ import com.mycompany.mavenproject3.models.AppointmentStatus;
 import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.ServiceAppointment;
 import com.mycompany.mavenproject3.utils.Util;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface AppointmentsPage extends Refreshable {
 
@@ -31,10 +38,19 @@ public interface AppointmentsPage extends Refreshable {
 
     Text getAppointmentsCountText();
 
+    CheckBox getScheduledCheckBox();
+
+    CheckBox getCompletedCheckBox();
+
+    CheckBox getCanceledCheckBox();
 
     default void loadAppointments() {
 
-        List<ServiceAppointment> appointments = DbHelper.getServiceAppointments(); // Retrieve appointments
+        List<ServiceAppointment> appointments = DbHelper.getServiceAppointments(
+                getScheduledCheckBox().isSelected(),
+                getCompletedCheckBox().isSelected(),
+                getCanceledCheckBox().isSelected()
+        ); // Retrieve appointments
         System.out.println("Appointments: " + appointments.size());
         //
         ObservableList<ServiceAppointment> observableAppointments = Util.getObservableList(appointments);
@@ -52,7 +68,19 @@ public interface AppointmentsPage extends Refreshable {
         }
         getAppointmentsTableView().setItems(observableAppointments);
         createOptions(observableAppointments); // Pass observableAppointments to createOptions
+        listeners();
+    }
 
+    private void listeners() {
+        getScheduledCheckBox().setOnAction(event -> {
+            loadAppointments();
+        });
+        getCompletedCheckBox().setOnAction(event -> {
+            loadAppointments();
+        });
+        getCanceledCheckBox().setOnAction(event -> {
+            loadAppointments();
+        });
     }
 
     private void createOptions(ObservableList<ServiceAppointment> observableAppointments) {

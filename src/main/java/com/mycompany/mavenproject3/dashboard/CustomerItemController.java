@@ -10,7 +10,6 @@ public class CustomerItemController {
 
 
     private Customer customer;
-    Runnable onClickListener;
 
     @FXML
     VBox parentVbox;
@@ -25,10 +24,6 @@ public class CustomerItemController {
 
     }
 
-    public void setOnClickListener(Runnable onClickListener) {
-        this.onClickListener = onClickListener;
-    }
-
     public void setCustomer(Customer customer) {
         this.customer = customer;
         boolean hasCustomer = customer != null;
@@ -39,24 +34,5 @@ public class CustomerItemController {
 
     private void reloadUI() {
 
-    }
-
-
-//    @FXML
-//    // Change the color when mouse enters the VBox
-//    private void onCustomerMouseEnter(MouseEvent event) {
-//        parentVbox.setStyle(parentVbox.getStyle().replace(hoverStyle, ""));
-//        parentVbox.setStyle(parentVbox.getStyle() + hoverStyle);
-//    }
-//
-//    @FXML
-//    // Revert the color when mouse exits the VBox
-//    private void onCustomerMouseExit(MouseEvent event) {
-//        parentVbox.setStyle(parentVbox.getStyle().replace(hoverStyle, ""));
-//    }
-
-    @FXML
-    private void onMouseClicked() {
-        onClickListener.run();
     }
 }

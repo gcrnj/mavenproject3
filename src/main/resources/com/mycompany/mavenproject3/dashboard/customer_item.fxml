@@ -3,44 +3,52 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="parentVbox" minWidth="250.0" mouseTransparent="true" onMouseClicked="#onMouseClicked" prefHeight="61.0" prefWidth="275.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: grey;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.CustomerItemController">
+<VBox minHeight="-Infinity" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.dashboard.CustomerItemController">
    <children>
-      <TextFlow maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <VBox fx:id="parentVbox" minWidth="250.0" prefWidth="275.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: grey;">
          <children>
-            <Text fx:id="customerNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Name">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Text>
+            <TextFlow maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <children>
+                  <Text fx:id="customerNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Name">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </TextFlow>
+            <TextFlow layoutX="10.0" layoutY="10.0">
+               <children>
+                  <Text fx:id="customerNumberText" layoutX="84.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contact Number">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" / " />
+                  <Text fx:id="customerEmailText" strokeType="OUTSIDE" strokeWidth="0.0" text="Email Address">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="2.0" top="5.0" />
+               </VBox.margin>
+            </TextFlow>
          </children>
-      </TextFlow>
-      <TextFlow layoutX="10.0" layoutY="10.0">
-         <children>
-            <Text fx:id="customerNumberText" layoutX="84.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contact Number">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" / " />
-            <Text fx:id="customerEmailText" strokeType="OUTSIDE" strokeWidth="0.0" text="Email Address">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Text>
-         </children>
-      </TextFlow>
-      <Line endX="100.0" startX="-100.0">
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin></Line>
+         <padding>
+            <Insets left="2.0" right="2.0" top="2.0" />
+         </padding>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </VBox>
    </children>
    <padding>
-      <Insets bottom="15.0" left="2.0" right="2.0" top="2.0" />
+      <Insets bottom="5.0" left="2.0" right="2.0" top="2.0" />
    </padding>
-   <cursor>
-      <Cursor fx:constant="HAND" />
-   </cursor>
 </VBox>

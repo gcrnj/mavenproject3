@@ -1,8 +1,20 @@
 package com.mycompany.mavenproject3.models;
 
 public enum AppointmentStatus {
-    SCHEDULED,    // Appointment is scheduled but not yet completed
-    COMPLETED,    // Appointment has been successfully completed
-    CANCELED,     // Appointment has been canceled
-    RESCHEDULED;  // Appointment has been rescheduled
+    SCHEDULED("Scheduled"),    // Appointment is scheduled but not yet completed
+    COMPLETED("Completed"),    // Appointment has been successfully completed
+    CANCELED("Canceled"),     // Appointment has been canceled
+    RESCHEDULED("Rescheduled");  // Appointment has been rescheduled
+    // Declare a private field to hold the camelCaseName
+    private final String camelCaseName;
+
+    // Constructor for the enum
+    AppointmentStatus(String camelCaseName) {
+        this.camelCaseName = camelCaseName;
+    }
+
+    // Getter method to retrieve the camelCaseName
+    public String getCamelCaseName() {
+        return camelCaseName;
+    }
 }
