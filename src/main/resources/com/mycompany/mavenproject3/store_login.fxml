@@ -52,7 +52,7 @@
                   <RadioButton mnemonicParsing="false" text="Owner" textFill="WHITE" toggleGroup="$role" />
                </children>
             </HBox>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleLogin" prefHeight="33.0" prefWidth="142.0" style="-fx-background-radius: 3;" styleClass="color-success-bg" text="Login" textAlignment="CENTER">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleLogin" prefHeight="33.0" prefWidth="142.0" style="-fx-background-radius: 3;" styleClass="success" text="Login" textAlignment="CENTER">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>

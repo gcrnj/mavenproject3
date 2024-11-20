@@ -1,5 +1,8 @@
 package com.mycompany.mavenproject3;
 
+import atlantafx.base.theme.CupertinoDark;
+import atlantafx.base.theme.Dracula;
+import atlantafx.base.theme.NordDark;
 import atlantafx.base.theme.PrimerDark;
 import com.mycompany.mavenproject3.models.DbHelper;
 import javafx.application.Application;
@@ -20,7 +23,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
         StoreLoginController.startNewScene();
     }
 

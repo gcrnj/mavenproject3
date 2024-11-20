@@ -11,17 +11,17 @@
 
 <HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateAppointmentFormController">
     <children>
-        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="207.0">
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="0.0">
             <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Customer">
                     <font>
                         <Font size="14.0" />
                     </font>
                 </Text>
-            <JFXTextArea fx:id="customerSearchTextArea" prefHeight="24.0" prefWidth="346.0" promptText="Search for a Customer" />
-                <ScrollPane prefHeight="200.0" prefWidth="314.0" VBox.vgrow="ALWAYS">
+            <JFXTextField fx:id="customerSearchTextField" prefHeight="24.0" prefWidth="346.0" promptText="Search for a Customer" />
+                <ScrollPane fitToWidth="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" VBox.vgrow="ALWAYS">
                     <content>
-                        <VBox fx:id="customersVbox" fillWidth="false" prefHeight="0.0">
+                        <VBox fx:id="customersVbox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="350.0">
                      <children>
                         <Text fx:id="createCustomerButton" fill="#0c5be4" onMouseClicked="#openCreateCustomerForm" strokeType="OUTSIDE" strokeWidth="0.0" text="Create customer +">
                            <cursor>
@@ -45,7 +45,7 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
         </VBox>
-        <VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="440.0" prefWidth="366.0">
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="502.0" prefWidth="410.0">
             <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Service">
                     <VBox.margin>
@@ -55,10 +55,10 @@
                   <Font size="14.0" />
                </font>
                 </Text>
-            <JFXTextArea fx:id="serviceSearchTextArea" prefHeight="24.0" prefWidth="346.0" promptText="Search for Services" />
-                <ScrollPane maxHeight="500.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="346.0" VBox.vgrow="NEVER">
+            <JFXTextField fx:id="serviceSearchTextField" prefHeight="24.0" prefWidth="346.0" promptText="Search for Services" />
+                <ScrollPane fitToWidth="true" maxHeight="500.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" VBox.vgrow="NEVER">
                     <content>
-                        <VBox fx:id="servicesVBox" maxHeight="-Infinity" minHeight="-Infinity" prefWidth="330.0" />
+                        <VBox fx:id="servicesVBox" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
                     </content>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -138,7 +138,7 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
         </VBox>
-          <VBox maxHeight="200.0">
+          <VBox maxHeight="502.0" prefHeight="502.0" prefWidth="298.0">
               <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Customer">
                <font>
@@ -173,12 +173,12 @@
                </font>
                   </Text>
             <Text fx:id="servicesErrorText" layoutX="15.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
-            <ScrollPane minHeight="-Infinity" prefHeight="279.0" prefWidth="206.0">
+            <ScrollPane fitToWidth="true" minHeight="-Infinity" prefHeight="279.0" prefWidth="206.0">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
                <content>
-                        <VBox fx:id="selectedServicesVBox" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="190.0" />
+                        <VBox fx:id="selectedServicesVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="156.0" />
                </content>
             </ScrollPane>
             <ButtonBar prefHeight="40.0" prefWidth="200.0">

@@ -12,10 +12,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import com.mycompany.mavenproject3.dashboard.CustomerItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceItemController;
 import com.mycompany.mavenproject3.dashboard.ServicesPage;
-import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.Customer;
 import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.LocalCache;
@@ -49,7 +49,7 @@ public class CreateAppointmentFormController {
     @FXML
     public VBox customersVbox;
     @FXML
-    public JFXTextArea customerSearchTextArea, serviceSearchTextArea;
+    public JFXTextField customerSearchTextField, serviceSearchTextField;
     @FXML
     public VBox servicesVBox, selectedServicesVBox;
     @FXML
@@ -159,7 +159,7 @@ public class CreateAppointmentFormController {
     public void initialize() {
         addListeners();
         addObservers();
-        reloadCustomersList(customerSearchTextArea.getText());
+        reloadCustomersList(customerSearchTextField.getText());
         initDatePicker();
     }
 
@@ -201,7 +201,7 @@ public class CreateAppointmentFormController {
                             // Remove from the list
                             selectedServices.remove(addedService);
                             selectedServicesVBox.getChildren().remove(currentSelectedText);
-                            reloadServicesList(serviceSearchTextArea.getText());
+                            reloadServicesList(serviceSearchTextField.getText());
                         });
                     }
                 }
@@ -231,11 +231,11 @@ public class CreateAppointmentFormController {
     }
 
     private void addListeners() {
-        customerSearchTextArea.textProperty().removeListener(customersTextChangeListener);
-        customerSearchTextArea.textProperty().addListener(customersTextChangeListener);
+        customerSearchTextField.textProperty().removeListener(customersTextChangeListener);
+        customerSearchTextField.textProperty().addListener(customersTextChangeListener);
 
-        serviceSearchTextArea.textProperty().removeListener(servicesTextChangeListener);
-        serviceSearchTextArea.textProperty().addListener(servicesTextChangeListener);
+        serviceSearchTextField.textProperty().removeListener(servicesTextChangeListener);
+        serviceSearchTextField.textProperty().addListener(servicesTextChangeListener);
     }
 
     @FXML
