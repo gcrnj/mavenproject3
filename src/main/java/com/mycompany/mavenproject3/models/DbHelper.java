@@ -2,11 +2,7 @@ package com.mycompany.mavenproject3.models;
 
 import com.mycompany.mavenproject3.utils.PasswordUtils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -410,5 +406,42 @@ public class DbHelper {
         return barangays; // Return the list of barangays
     }
 
+    public static String createVehicle(String vehicleName) {
+        int createdBy = LocalCache.getEmployee().getEmployeeID();
+        String sql = "INSERT INTO " + Vehicle.TABLE_NAME +
+                " (" + Vehicle.COL_VEHICLE_NAME + ", " + Vehicle.COL_CREATED_BY + ")" +
+                " VALUES (?, ?)";
+        String error = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, vehicleName);
+            preparedStatement.setInt(2, createdBy);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            error = e.getMessage();
+            e.printStackTrace(); // Handle exceptions properly in production
+        }
+        return error; // Return null if successful, or the error message if not
+    }
+
+    public List<Vehicle> getVehicles() {
+        List<Vehicle> vehicles = new ArrayList<>();
+        String sql = "SELECT * FROM " + Vehicle.TABLE_NAME; // SQL query to select all vehicles
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            // Loop through the result set and create Vehicle objects
+            while (resultSet.next()) {
+                Vehicle vehicle = new Vehicle(resultSet, true); // Pass ResultSet to the Vehicle constructor
+                vehicles.add(vehicle); // Add the Vehicle object to the list
+            }
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+        }
+
+        return vehicles; // Return the list of vehicles
+    }
 
 }

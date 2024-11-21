@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateVehicleFormController">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Vehicle Name" />
+      <JFXTextField fx:id="vehicleTextField" prefHeight="26.0" prefWidth="216.0" />
+      <Text fill="#fa2727" strokeType="OUTSIDE" strokeWidth="0.0">
+         <VBox.margin>
+            <Insets top="25.0" />
+         </VBox.margin>
+      </Text>
+      <HBox alignment="CENTER" prefHeight="26.0" prefWidth="160.0">
+         <children>
+          <Button alignment="CENTER" mnemonicParsing="false" onAction="#onCancelClick" styleClass="danger" text="Cancel" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#onSaveClick" styleClass="success" text="Save">
+               <HBox.margin>
+                  <Insets left="15.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets top="25.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+</VBox>

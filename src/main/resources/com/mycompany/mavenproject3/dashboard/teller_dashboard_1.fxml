@@ -114,6 +114,30 @@
                     </content>
                 </Tab>
                 <Tab text="Products" />
+            <Tab text="Vehicles">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="970.0">
+                     <children>
+                        <TableView fx:id="appointmentsTableView1" layoutY="60.0" prefHeight="430.0" prefWidth="970.0">
+                           <columns>
+                              <TableColumn fx:id="appointmentDateColumn1" prefWidth="523.2000671625137" text="Vehicle Name" />
+                              <TableColumn fx:id="appointmentCreatedColumn1" prefWidth="280.79998779296875" text="Created by" />
+                              <TableColumn fx:id="appointmentEmployeePositionColumn1" prefWidth="166.39992675781252" text="Position" />
+                           </columns>
+                        </TableView>
+                        <Button layoutX="23.0" layoutY="22.0" mnemonicParsing="false" onAction="#openVehicleForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <TextField layoutX="106.0" layoutY="21.0" prefHeight="26.0" prefWidth="188.0" promptText="Search Vehicle" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
             </tabs>
         </TabPane>
     </children>

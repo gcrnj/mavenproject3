@@ -8,6 +8,7 @@ import com.mycompany.mavenproject3.myforms.CreateServiceFormController;
 import java.io.IOException;
 import java.util.Objects;
 
+import com.mycompany.mavenproject3.myforms.CreateVehicleFormController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -123,6 +124,11 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @FXML
     private void openServicesForm() {
         CreateServiceFormController.startNewScene(this);
+    }
+
+    @FXML
+    private void openVehicleForm() {
+        CreateVehicleFormController.startNewScene(this);
     }
 
     @Override
