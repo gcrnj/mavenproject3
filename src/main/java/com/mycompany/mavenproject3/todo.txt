@@ -21,6 +21,7 @@ All
     - Create Product
     - Sell Products with quantity
 - \Sales Page
+- \Vehicle Types
 
 Teller
 - Employee (View own details only)
@@ -28,6 +29,7 @@ Teller
 - Services (View)
 - Products (View)
 - Selling (Create, View)
+- Vehicle Types (None)
 
 Manager
 - Employees (Create Teller only, View-Edit own details and teller details),
@@ -35,6 +37,7 @@ Manager
 - Services (Create, View, Edit)
 - Products (Create, View, Edit)
 - Selling (Create, View, Edit, Delete/Void)
+- Vehicle Types (Create, View, Edit, Delete)
 
 Owner
 - Employees (Create, View and Edit all roles(Owner, Manager and Teller)),
