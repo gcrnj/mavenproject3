@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import org.controlsfx.control.*?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateServiceFormController">
    <children>
@@ -34,8 +35,10 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Text>
-                  <TextField fx:id="wheelsAvailableTextField" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0" promptText="Leave blank for all" />
-                  <Text fx:id="wheelsCountErrorText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="This field is required" visible="false">
+                  <CheckComboBox fx:id="wheelsComboBox" prefHeight="26.0" prefWidth="152.0">
+
+                  </CheckComboBox>
+                  <Text fx:id="wheelsTextError" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="This field is required" visible="false">
                      <font>
                         <Font name="System Italic" size="12.0" />
                      </font>

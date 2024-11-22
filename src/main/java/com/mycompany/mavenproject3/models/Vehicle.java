@@ -60,7 +60,7 @@ public class Vehicle {
     }
 
     public String getFormattedCreatedAt() {
-        return createdAt.toLocalDateTime().format(dateFormatter);
+        return createdAt == null ? null : createdAt.toLocalDateTime().format(dateFormatter);
     }
 
     // Additional methods if needed

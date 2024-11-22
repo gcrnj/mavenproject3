@@ -219,22 +219,53 @@ public class DbHelper {
 
     public static List<Service> getServices() {
         List<Service> services = new ArrayList<>();
-        String sql = "SELECT * FROM " + Service.TABLE_NAME; // SQL query to select all services
+        String sql = "SELECT s.*, v.*, e.*, p.* " +  // Select services along with vehicle and employee info
+                "FROM " + Service.TABLE_NAME + " AS s " +
+                "LEFT JOIN ServiceVehicle AS sv ON s.ServiceID = sv.ServiceID " + // Join with ServiceVehicle table
+                "LEFT JOIN Vehicles AS v ON sv.VehicleID = v.VehicleID " + // Join with Vehicle table
+                "LEFT JOIN Employee AS e ON v.CreatedBy = e.EmployeeID " + // Join with Employee table
+                "LEFT JOIN Position AS p ON e.PositionID = p.PositionID"; // Join with Position table
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            // Loop through the result set and create Service objects
+            Service currentService = null;
+            List<Vehicle> vehiclesForCurrentService = new ArrayList<>();
+
+            // Loop through the result set
             while (resultSet.next()) {
-                Service service = new Service(resultSet);
-                services.add(service); // Add the Service object to the list
+                int serviceId = resultSet.getInt(Service.COL_SERVICE_ID);
+
+                // If it's a new service, add the previous service to the list and reset the vehicles list
+                if (currentService == null || currentService.getServiceID() != serviceId) {
+                    if (currentService != null) {
+                        currentService.setVehicles(vehiclesForCurrentService); // Set vehicles for the previous service
+                        services.add(currentService); // Add the current service to the list
+                    }
+
+                    // Create a new service object and reset the vehicles list
+                    currentService = new Service(resultSet);
+                    vehiclesForCurrentService = new ArrayList<>();
+                }
+
+                // Add vehicle to the list if it's part of the current service
+                Vehicle vehicle = new Vehicle(resultSet, true);
+                vehiclesForCurrentService.add(vehicle);
             }
+
+            // Add the last service to the list after exiting the loop
+            if (currentService != null) {
+                currentService.setVehicles(vehiclesForCurrentService); // Set vehicles for the last service
+                services.add(currentService); // Add the final service to the list
+            }
+
         } catch (SQLException e) {
             // Handle exceptions
             e.printStackTrace(); // For debugging
         }
 
-        return services; // Return the list of services
+        return services; // Return the list of services with their associated vehicles
     }
+
 
     public static List<Service> getServicesByName(String serviceName) {
         List<Service> services = new ArrayList<>();
@@ -319,24 +350,51 @@ public class DbHelper {
         return error;
     }
 
-    public static String createService(String serviceName, double price, String description, String wheelsAvailable, boolean isAvailable) {
-        String sql = "INSERT INTO " + Service.TABLE_NAME + " (ServiceName, Price, Description, Wheels, IsAvailable) VALUES (?, ?, ?, ?, ?)";
-        String error = null;
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, serviceName);
-            preparedStatement.setDouble(2, price);
-            preparedStatement.setString(3, description);
-            preparedStatement.setString(4, wheelsAvailable);
-            preparedStatement.setBoolean(5, isAvailable);
+    public static String createService(String serviceName, double price, String description, List<Vehicle> vehicles, boolean isAvailable) {
+        String serviceInsertSql = "INSERT INTO " + Service.TABLE_NAME + " (ServiceName, Price, Description, IsAvailable) VALUES (?, ?, ?, ?)";
+        String serviceVehicleInsertSql = "INSERT INTO ServiceVehicle (ServiceID, VehicleID) VALUES (?, ?)";
 
-            preparedStatement.executeUpdate();
+        String error = null;
+        int serviceId = -1; // Will store the generated ServiceID
+
+        try {
+            // Insert the service and retrieve the generated ServiceID
+            PreparedStatement serviceInsertStatement = connection.prepareStatement(serviceInsertSql, PreparedStatement.RETURN_GENERATED_KEYS);
+            serviceInsertStatement.setString(1, serviceName);
+            serviceInsertStatement.setDouble(2, price);
+            serviceInsertStatement.setString(3, description);
+            serviceInsertStatement.setBoolean(4, isAvailable);
+
+            int rowsAffected = serviceInsertStatement.executeUpdate(); // Execute the insert statement
+
+            if (rowsAffected == 0) {
+                return "Error: No rows affected while inserting service.";
+            }
+
+            // Retrieve the generated ServiceID
+            ResultSet generatedKeys = serviceInsertStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                serviceId = generatedKeys.getInt(1);  // Get the generated ServiceID
+            } else {
+                return "Error: Service ID not generated.";
+            }
+
+            // Insert the vehicles into the ServiceVehicle table
+            for (Vehicle vehicle : vehicles) {
+                PreparedStatement serviceVehicleInsertStatement = connection.prepareStatement(serviceVehicleInsertSql);
+                serviceVehicleInsertStatement.setInt(1, serviceId);  // Set the generated ServiceID
+                serviceVehicleInsertStatement.setInt(2, vehicle.getVehicleId());  // Set the VehicleID
+                serviceVehicleInsertStatement.executeUpdate();
+            }
+
         } catch (SQLException e) {
             error = e.getMessage();
             e.printStackTrace(); // Handle exceptions properly in production
         }
-        return error; // Return whether the appointment was created successfully
+
+        return error; // Return null if successful, or the error message if not
     }
+
 
     public static List<Province> getProvinces() {
         List<Province> provinces = new ArrayList<>();

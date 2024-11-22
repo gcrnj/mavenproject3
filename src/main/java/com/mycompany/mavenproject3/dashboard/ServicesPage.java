@@ -3,6 +3,7 @@ package com.mycompany.mavenproject3.dashboard;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.Service;
+import com.mycompany.mavenproject3.models.Vehicle;
 import com.mycompany.mavenproject3.utils.Util;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface ServicesPage extends Refreshable {
 
@@ -36,10 +38,20 @@ public interface ServicesPage extends Refreshable {
         System.out.println("Services: " + services.size());
 
         ObservableList<Service> observableServices = Util.getObservableList(services);
-
         getServiceNameColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getServiceName()));
         getServicePriceColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrice() + ""));
-        getServiceWheelsColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getWheels() + ""));
+        getServiceWheelsColumn().setCellValueFactory(cellData -> {
+            List<Vehicle> vehicles = cellData.getValue().getVehicles(); // Get the list of vehicles for the service
+            if (vehicles != null && !vehicles.isEmpty()) {
+                // Join the vehicle names using a comma separator
+                String vehicleNames = vehicles.stream()
+                        .map(Vehicle::getVehicleName) // Assuming 'getVehicleName' is the method to get the name
+                        .collect(Collectors.joining(", ")); // Join with ", "
+                return new SimpleStringProperty(vehicleNames); // Return the joined string as the cell value
+            } else {
+                return new SimpleStringProperty(""); // Return an empty string if no vehicles
+            }
+        });
         getIsAvailableColumn().setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isIsAvailable()));
         getServiceDescriptionColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
 

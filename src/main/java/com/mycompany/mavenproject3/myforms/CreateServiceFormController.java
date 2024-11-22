@@ -6,10 +6,11 @@ package com.mycompany.mavenproject3.myforms;
 
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.DbHelper;
+import com.mycompany.mavenproject3.models.Vehicle;
 import com.mycompany.mavenproject3.utils.TextFormatterUtil;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javafx.fxml.FXML;
@@ -25,6 +26,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import org.controlsfx.control.CheckComboBox;
 
 /**
  * FXML Controller class
@@ -37,7 +40,7 @@ public class CreateServiceFormController {
     private Alert successAlert, cancelAlert;
     private Refreshable refreshable;
     @FXML
-    public TextField serviceNameTextField, priceTextField, wheelsAvailableTextField;
+    public TextField serviceNameTextField, priceTextField;
 
     @FXML
     public TextArea descriptionTextArea;
@@ -46,7 +49,10 @@ public class CreateServiceFormController {
     public CheckBox isAvailableCheckBox;
 
     @FXML
-    public Text serviceNameErrorText, priceErrorText, dbErrorText, wheelsCountErrorText;
+    public Text serviceNameErrorText, priceErrorText, dbErrorText, wheelsTextError;
+
+    @FXML
+    CheckComboBox<Vehicle> wheelsComboBox;
 
     public static void startNewScene(Refreshable refreshable) {
         // Load the new FXML for the new window
@@ -75,7 +81,22 @@ public class CreateServiceFormController {
     public void initialize() {
         System.out.println("here");
         priceTextField.setTextFormatter(TextFormatterUtil.doubleTextFormatter());
-        wheelsAvailableTextField.setTextFormatter(TextFormatterUtil.intTextFormatter());
+        List<Vehicle> vehicles = DbHelper.getVehicles();
+        wheelsComboBox.getItems().clear();
+        wheelsComboBox.getItems().addAll(vehicles);
+        wheelsComboBox.getCheckModel().checkAll();
+        wheelsComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Vehicle vehicle) {
+                return vehicle.getVehicleName();
+            }
+
+            @Override
+            public Vehicle fromString(String s) {
+                return null;
+            }
+        });
+
     }
 
     public void setRefreshable(Refreshable refreshable) {
@@ -88,46 +109,45 @@ public class CreateServiceFormController {
         String regex = "^\\d+(,\\d+)*$";
         Pattern pattern = Pattern.compile(regex);
 
-        String wheelsCountInput = wheelsAvailableTextField.getText();
         boolean isServiceNameError = serviceNameTextField.getText().isBlank();
         boolean isPriceError = priceTextField.getText().isBlank();
-        boolean isWheelsCountError = !wheelsCountInput.isBlank() && Integer.parseInt(wheelsAvailableTextField.getText()) <= 0;
+        boolean isWheelsCountError = wheelsComboBox.getCheckModel().getCheckedItems().isEmpty();
 
         // Reset all error texts to hidden initially
         serviceNameErrorText.setVisible(false);
         priceErrorText.setVisible(false);
-        wheelsCountErrorText.setVisible(false);
+        wheelsTextError.setVisible(false);
 
         if (isServiceNameError && isPriceError && isWheelsCountError) {
             serviceNameErrorText.setVisible(true);
             priceErrorText.setVisible(true);
-            wheelsCountErrorText.setVisible(true);
+            wheelsTextError.setVisible(true);
         } else if (isServiceNameError && isPriceError) {
             serviceNameErrorText.setVisible(true);
             priceErrorText.setVisible(true);
         } else if (isServiceNameError && isWheelsCountError) {
             serviceNameErrorText.setVisible(true);
-            wheelsCountErrorText.setVisible(true);
+            wheelsTextError.setVisible(true);
         } else if (isPriceError && isWheelsCountError) {
             priceErrorText.setVisible(true);
-            wheelsCountErrorText.setVisible(true);
+            wheelsTextError.setVisible(true);
         } else if (isServiceNameError) {
             serviceNameErrorText.setVisible(true);
         } else if (isPriceError) {
             priceErrorText.setVisible(true);
         } else if (isWheelsCountError) {
-            wheelsCountErrorText.setVisible(true);
+            wheelsTextError.setVisible(true);
         } else {
             serviceNameErrorText.setVisible(false);
             priceErrorText.setVisible(false);
-            wheelsCountErrorText.setVisible(false);
+            wheelsTextError.setVisible(false);
             // Everything is handled
             // Add to database
             String error = DbHelper.createService(
                     serviceNameTextField.getText(),
                     Double.parseDouble(priceTextField.getText()),
                     descriptionTextArea.getText(),
-                    wheelsAvailableTextField.getText(),
+                    wheelsComboBox.getCheckModel().getCheckedItems(),
                     isAvailableCheckBox.isSelected()
             );
             if (error != null) {
@@ -161,7 +181,7 @@ public class CreateServiceFormController {
 
         if (!serviceNameTextField.getText().isBlank()
                 || !priceTextField.getText().isBlank()
-                || !wheelsAvailableTextField.getText().isBlank()
+                || !wheelsComboBox.getCheckModel().getCheckedItems().isEmpty()
                 || !descriptionTextArea.getText().isBlank()
                 || !isAvailableCheckBox.isSelected()) {
             if (cancelAlert == null) {

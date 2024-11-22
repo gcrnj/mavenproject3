@@ -2,6 +2,7 @@ package com.mycompany.mavenproject3.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Service {
 
@@ -10,15 +11,14 @@ public class Service {
     public static final String COL_SERVICE_NAME = "ServiceName";
     public static final String COL_DESCRIPTION = "Description";
     public static final String COL_PRICE = "Price";
-    public static final String COL_WHEELS = "Wheels";
     public static final String COL_IS_AVAILABLE = "IsAvailable";
 
     private int serviceID;
     private String serviceName;
     private String description;
     private double price;
-    private int wheels;
     private boolean isAvailable;
+    private List<Vehicle> vehicles;
 
     // Constructor to initialize Service from ResultSet
     public Service(ResultSet resultSet) throws SQLException {
@@ -26,7 +26,6 @@ public class Service {
         this.serviceName = resultSet.getString(COL_SERVICE_NAME);
         this.description = resultSet.getString(COL_DESCRIPTION);
         this.price = resultSet.getDouble(COL_PRICE);
-        this.wheels = resultSet.getInt(COL_WHEELS);
         this.isAvailable = resultSet.getBoolean(COL_IS_AVAILABLE);
     }
 
@@ -63,14 +62,6 @@ public class Service {
         this.price = price;
     }
 
-    public int getWheels() {
-        return wheels;
-    }
-
-    public void setWheels(int wheels) {
-        this.wheels = wheels;
-    }
-
     public boolean isIsAvailable() {
         return isAvailable;
     }
@@ -78,7 +69,13 @@ public class Service {
     public void setIsAvailable(boolean isAvailable) {
         this.isAvailable = isAvailable;
     }
-    
-    
-    
+
+
+    public List<Vehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
 }

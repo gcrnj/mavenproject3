@@ -4,9 +4,12 @@
  */
 package com.mycompany.mavenproject3.dashboard;
 
+import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.Service;
+import com.mycompany.mavenproject3.models.Vehicle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
@@ -24,6 +27,8 @@ public class ServiceItemController {
     @FXML
     Button optionsButton;
 
+    @FXML
+    ComboBox<Vehicle> vehiclesComboBox;
 
     public ServiceItemController() {
     }
@@ -35,13 +40,16 @@ public class ServiceItemController {
 
     private void reloadUI() {
         serviceNameText.setText(service.getServiceName());
-        wheelsText.setText("Wheels: " + service.getWheels());
         descriptionText.setText(service.getDescription());
 
         String unavailable = "-fx-background-color: grey;";
         if (!service.isIsAvailable()) {
             backgroundHBox.setStyle(backgroundHBox.getStyle() + unavailable);
         }
+
+        // Vehicles
+        vehiclesComboBox.getItems().clear();
+        vehiclesComboBox.getItems().addAll(service.getVehicles());
     }
     
     @FXML
