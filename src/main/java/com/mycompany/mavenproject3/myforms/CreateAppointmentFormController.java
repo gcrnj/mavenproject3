@@ -58,6 +58,7 @@ public class CreateAppointmentFormController {
     private Text customerNameText, dateText, timeText, servicesErrorText;
     @FXML
     private ComboBox<String> hourTimePicker, minutePicker, amOrPmPicker;
+    Stage stage;
 
     ObservableList<Service> selectedServices = FXCollections.observableArrayList();
     SimpleObjectProperty<Customer> selectedCustomer = new SimpleObjectProperty<>();
@@ -68,14 +69,15 @@ public class CreateAppointmentFormController {
 
     // Define the ChangeListeners
     private final ChangeListener<String> servicesTextChangeListener = (observable, oldValue, newValue) -> {
-        reloadServicesList(newValue);
+        reloadServicesList();
     };
 
     private final ChangeListener<String> customersTextChangeListener = (observable, oldValue, newValue) -> {
         reloadCustomersList(newValue);
     };
 
-    private void reloadServicesList(String serviceNameSearch) {
+    private void reloadServicesList() {
+        String serviceNameSearch = serviceSearchTextField.getText();
         servicesVBox.getChildren().clear();
         servicesVBox.prefWidth(Double.MAX_VALUE);
         List<Service> services = serviceNameSearch.isBlank() ?
@@ -100,7 +102,7 @@ public class CreateAppointmentFormController {
                 root.setOnMouseClicked(mouseEvent -> {
 
                     selectedServices.add(service);
-                    reloadServicesList(serviceNameSearch);
+                    reloadServicesList();
                 });
             }
         } catch (IOException e) {
@@ -141,6 +143,7 @@ public class CreateAppointmentFormController {
             // Load the FXML and retrieve the root element
             Parent root = loader.load();            // Create a new Stage (window)
             Stage stage = new Stage();
+
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Create Appointment Form");
@@ -149,9 +152,14 @@ public class CreateAppointmentFormController {
             stage.show();  // Show the new window
             CreateAppointmentFormController controller = loader.getController();
             controller.servicesPage = servicesPage;
+            controller.setStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     @FXML
@@ -160,7 +168,7 @@ public class CreateAppointmentFormController {
         addObservers();
         reloadCustomersList(customerSearchTextField.getText());
         initDatePicker();
-        reloadServicesList("");
+        reloadServicesList();
     }
 
     @FXML
@@ -196,7 +204,7 @@ public class CreateAppointmentFormController {
                             // Remove from the list
                             selectedServices.remove(addedService);
                             selectedServicesVBox.getChildren().remove(currentSelectedText);
-                            reloadServicesList(serviceSearchTextField.getText());
+                            reloadServicesList();
                         });
                     }
                 }
@@ -279,7 +287,7 @@ public class CreateAppointmentFormController {
             }
             // Add to db
             String error = DbHelper.createAppointment(
-                    selectedServices.get(0).getServiceID(),
+                    selectedServices,
                     selectedCustomer.getValue().getCustomerID(),
                     LocalCache.getEmployee().getEmployeeID(),
                     selectedDate.get().atTime(finalHour, Integer.parseInt(selectedMinute.getValue()))
@@ -287,6 +295,7 @@ public class CreateAppointmentFormController {
             if (error == null) {
                 // No error
                 servicesPage.refresh();
+                stage.close();
             } else {
                 // Show error
             }

@@ -58,7 +58,7 @@ public interface ServicesPage extends Refreshable {
         if (observableServices.isEmpty()) {
             getServicesCountText().setText("There are NO scheduled appointments");
         } else {
-            getServicesCountText().setText("There are {" + observableServices.size() + "} services found");
+            getServicesCountText().setText("There are " + observableServices.size() + " services found");
         }
         getServiceTableView().setItems(observableServices);
     }

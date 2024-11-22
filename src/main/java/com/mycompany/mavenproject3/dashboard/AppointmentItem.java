@@ -1,6 +1,6 @@
 package com.mycompany.mavenproject3.dashboard;
 
-import com.mycompany.mavenproject3.models.ServiceAppointment;
+import com.mycompany.mavenproject3.models.Appointment;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -21,7 +21,7 @@ public class AppointmentItem {
 
     private final HBox root; // This will be the container for the UI elements
 
-    public AppointmentItem(ServiceAppointment appointment) throws IOException {
+    public AppointmentItem(Appointment appointment) throws IOException {
         // Load the FXML for this AppointmentItem
         FXMLLoader loader = new FXMLLoader(getClass().getResource("appointment_item.fxml"));
 

@@ -4,16 +4,17 @@
  */
 package com.mycompany.mavenproject3.dashboard;
 
-import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.Service;
 import com.mycompany.mavenproject3.models.Vehicle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ServiceItemController {
 
@@ -27,8 +28,6 @@ public class ServiceItemController {
     @FXML
     Button optionsButton;
 
-    @FXML
-    ComboBox<Vehicle> vehiclesComboBox;
 
     public ServiceItemController() {
     }
@@ -39,19 +38,27 @@ public class ServiceItemController {
     }
 
     private void reloadUI() {
+
         serviceNameText.setText(service.getServiceName());
+        wheelsText.setText(getVehicles(service.getVehicles()));
         descriptionText.setText(service.getDescription());
 
         String unavailable = "-fx-background-color: grey;";
         if (!service.isIsAvailable()) {
             backgroundHBox.setStyle(backgroundHBox.getStyle() + unavailable);
         }
-
-        // Vehicles
-        vehiclesComboBox.getItems().clear();
-        vehiclesComboBox.getItems().addAll(service.getVehicles());
     }
-    
+
+    private String getVehicles( List<Vehicle> vehicles) {
+        if (vehicles != null && !vehicles.isEmpty()) {
+            return vehicles.stream()
+                    .map(Vehicle::getVehicleName) // Assuming 'getVehicleName' is the method to get the name
+                    .collect(Collectors.joining(", ")); // Return the joined string as the cell value
+        } else {
+            return ""; // Return an empty string if no vehicles
+        }
+    }
+
     @FXML
     private void basta() {
         System.out.println("HEllo");

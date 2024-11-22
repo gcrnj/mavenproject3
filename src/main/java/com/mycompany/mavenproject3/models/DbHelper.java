@@ -1,6 +1,7 @@
 package com.mycompany.mavenproject3.models;
 
 import com.mycompany.mavenproject3.utils.PasswordUtils;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -86,23 +87,25 @@ public class DbHelper {
         return isValidUser;
     }
 
-    public static List<ServiceAppointment> getServiceAppointments(
+    public static List<Appointment> getAppointments(
             boolean scheduled,
             boolean completed,
             boolean canceled
     ) {
-        List<ServiceAppointment> appointments = new ArrayList<>();
+        List<Appointment> appointments = new ArrayList<>();
         String sql = "SELECT sa.*, "
                 + "e.EmployeeID AS EmployeeID, e.FirstName AS EmployeeFirstName, e.LastName AS EmployeeLastName, e.ContactNumber AS EmployeeContactNumber, e.Email AS EmployeeEmail, "
                 + "c.BarangayID, c.HouseNumber, c.Street, c.Building, "
                 + "c.CustomerID AS CustomerID, c.FirstName AS CustomerFirstName, c.LastName AS CustomerLastName, c.ContactNumber AS CustomerContactNumber, c.Email AS CustomerEmail, "
-                + "p.*, s.* "
-                + "FROM " + ServiceAppointment.TABLE_NAME + " sa "
+                + "p.*, s.*, asv.Quantity AS ServiceQuantity "
+                + "FROM " + Appointment.TABLE_NAME + " sa "
                 + "JOIN " + Employee.TABLE_NAME + " e ON sa.EmployeeID = e.EmployeeID "
                 + "JOIN " + Customer.TABLE_NAME + " c ON sa.CustomerID = c.CustomerID "
                 + "JOIN " + Position.TABLE_NAME + " p ON e.PositionID = p.PositionID "
-                + "JOIN " + Service.TABLE_NAME + " s ON sa.ServiceID = s.ServiceID ";
+                + "JOIN " + AppointmentService.TABLE_NAME + " asv ON sa.AppointmentId = asv.AppointmentId "
+                + "JOIN " + Service.TABLE_NAME + " s ON asv.ServiceId = s.ServiceID ";
 
+        System.out.println(sql);
         // Dynamically build the WHERE clause based on the flags
         List<String> conditions = new ArrayList<>();
         if (scheduled) {
@@ -123,8 +126,23 @@ public class DbHelper {
 
             // Loop through the result set and create Appointment objects
             while (resultSet.next()) {
-                ServiceAppointment appointment = new ServiceAppointment(resultSet, false);
-                appointments.add(appointment); // Add the Appointment object to the list
+                Appointment appointment = new Appointment(resultSet, false);
+
+                // Get services for the appointment
+                int appointmentId = appointment.getAppointmentID();
+                List<Service> services = new ArrayList<>();
+                do {
+                    // Add the service to the list if it belongs to the same appointment
+                    Service service = new Service(resultSet); // Assume Service constructor handles the ResultSet
+                    service.setQuantity(resultSet.getInt("ServiceQuantity"));
+                    services.add(service);
+
+                    // If there's no more data for this appointment, break the loop
+                } while (resultSet.next() && resultSet.getInt("AppointmentID") == appointmentId);
+
+                // Set services in the appointment
+                appointment.setServices(services);
+                appointments.add(appointment);
             }
         } catch (SQLException e) {
             // Handle exceptions
@@ -133,6 +151,7 @@ public class DbHelper {
         }
         return appointments; // Return the list of appointments
     }
+
 
     public static List<Customer> getCustomers() {
         List<Customer> customers = new ArrayList<>();
@@ -255,6 +274,7 @@ public class DbHelper {
             // Add the last service to the list after exiting the loop
             if (currentService != null) {
                 currentService.setVehicles(vehiclesForCurrentService); // Set vehicles for the last service
+                currentService.setQuantity(1);
                 services.add(currentService); // Add the final service to the list
             }
 
@@ -309,26 +329,65 @@ public class DbHelper {
         return products; // Return the list of products
     }
 
-    public static String createAppointment(int serviceId, int customerId, int employeeId, LocalDateTime dateTime) {
+    public static String createAppointment(ObservableList<Service> services, int customerId, int employeeId, LocalDateTime dateTime) {
         String scheduled = AppointmentStatus.SCHEDULED.name();
-        String sql = "INSERT INTO " + ServiceAppointment.TABLE_NAME +
-                " (ServiceID, CustomerID, EmployeeID, AppointmentDateTime, Status)" +
-                " VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + Appointment.TABLE_NAME +
+                " (CustomerID, EmployeeID, AppointmentDateTime, Status)" +
+                " VALUES (?, ?, ?, ?)";
         String error = null;
+
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, serviceId);
-            preparedStatement.setInt(2, customerId);
-            preparedStatement.setInt(3, employeeId);
-            preparedStatement.setString(4, dateTime.format(formatter));
-            preparedStatement.setString(5, scheduled);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, customerId);
+            preparedStatement.setInt(2, employeeId);
+            preparedStatement.setString(3, dateTime.format(formatter));
+            preparedStatement.setString(4, scheduled);
+
+            // Execute the insert and get the generated AppointmentId
             preparedStatement.executeUpdate();
+
+            // Retrieve the generated AppointmentId
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            int appointmentId = 0;
+            if (resultSet.next()) {
+                appointmentId = resultSet.getInt(1); // Retrieve the generated AppointmentId
+            }
+
+            // Now create records in AppointmentServices table
+            error = createAppointmentServices(appointmentId, services); // Insert the services for the appointment
+
         } catch (SQLException e) {
             error = e.getMessage();
             e.printStackTrace(); // Handle exceptions properly in production
         }
-        return error; // Return whether the appointment was created successfully
+
+        return error; // Return null if successful, or the error message if not
+    }
+
+    public static String createAppointmentServices(int appointmentId, ObservableList<Service> services) {
+        String error = null;
+        String sql = "INSERT INTO " + AppointmentService.TABLE_NAME +
+                " (AppointmentId, ServiceId, Quantity) VALUES (?, ?, ?)";
+
+        try {
+            PreparedStatement preparedStatement;
+
+            // Iterate over the list of services and add each to the AppointmentServices table
+            for (Service service : services) {
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, appointmentId);  // Set the AppointmentId
+                preparedStatement.setInt(2, service.getServiceID()); // Set the ServiceId
+                preparedStatement.setInt(3, service.getQuantity()); // Set the ServiceId
+                preparedStatement.executeUpdate(); // Execute the insert
+            }
+
+        } catch (SQLException e) {
+            error = e.getMessage();
+            e.printStackTrace(); // Handle exceptions properly in production
+        }
+
+        return error; // Return null if successful, or the error message if not
     }
 
     public static String sellProduct(int productId, int quantitySold, int totalPrice) {

@@ -48,7 +48,7 @@ public class Vehicle {
     }
 
     public String getVehicleName() {
-        return vehicleName;
+        return vehicleName == null ? "" : vehicleName;
     }
 
     public Employee getCreatedBy() {

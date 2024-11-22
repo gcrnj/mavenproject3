@@ -19,6 +19,7 @@ public class Service {
     private double price;
     private boolean isAvailable;
     private List<Vehicle> vehicles;
+    private int quantity = 1;
 
     // Constructor to initialize Service from ResultSet
     public Service(ResultSet resultSet) throws SQLException {
@@ -77,5 +78,13 @@ public class Service {
 
     public void setVehicles(List<Vehicle> vehicles) {
         this.vehicles = vehicles;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

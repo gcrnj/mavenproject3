@@ -27,4 +27,21 @@ public class LocalCache {
     public static boolean isCustomer() {
         return customer != null;
     }
+
+    public static boolean isManager() {
+        return employee != null && employee.getPosition().getPositionName().equals("Manager");
+    }
+
+    public static boolean isEmployee() {
+        return employee != null && employee.getPosition().getPositionName().equals("Employee");
+    }
+
+    public static boolean isOwner() {
+        return employee != null && employee.getPosition().getPositionName().equals("Owner");
+    }
+
+    public static void logout() {
+        customer = null;
+        employee = null;
+    }
 }

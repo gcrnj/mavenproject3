@@ -88,7 +88,7 @@ public class CreateServiceFormController {
         wheelsComboBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Vehicle vehicle) {
-                return vehicle.getVehicleName();
+                return vehicle == null ? "" : vehicle.getVehicleName();
             }
 
             @Override

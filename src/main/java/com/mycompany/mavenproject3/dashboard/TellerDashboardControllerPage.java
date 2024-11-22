@@ -1,5 +1,6 @@
 package com.mycompany.mavenproject3.dashboard;
 
+import com.mycompany.mavenproject3.StoreLoginController;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.myforms.CreateAppointmentFormController;
@@ -9,10 +10,6 @@ import java.io.IOException;
 import java.util.Objects;
 
 import com.mycompany.mavenproject3.myforms.CreateVehicleFormController;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,9 +36,9 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     private Stage stage;
 
     @FXML
-    public TableView<ServiceAppointment> appointmentsTableView;
+    public TableView<Appointment> appointmentsTableView;
     @FXML
-    public TableColumn<ServiceAppointment, String> appointmentDateColumn, appointmentTimeColumn, appointmentCustomerColumn, appointmentServicesColumn, appointmentCreatedColumn, appointmentEmployeePositionColumn;
+    public TableColumn<Appointment, String> appointmentDateColumn, appointmentTimeColumn, appointmentCustomerColumn, appointmentServicesColumn, appointmentCreatedColumn, appointmentEmployeePositionColumn;
 
     @FXML
     public TableView<Service> serviceTableView;
@@ -160,7 +157,13 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
 
     @FXML
     public void logout() {
-
+        LocalCache.logout();
+        try {
+            StoreLoginController.startNewScene();
+            stage.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Start for override in Services
@@ -205,37 +208,37 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     // Start for override in Appointments
 
     @Override
-    public TableView<ServiceAppointment> getAppointmentsTableView() {
+    public TableView<Appointment> getAppointmentsTableView() {
         return appointmentsTableView;
     }
 
     @Override
-    public TableColumn<ServiceAppointment, String> getAppointmentDateColumn() {
+    public TableColumn<Appointment, String> getAppointmentDateColumn() {
         return appointmentDateColumn;
     }
 
     @Override
-    public TableColumn<ServiceAppointment, String> getAppointmentTimeColumn() {
+    public TableColumn<Appointment, String> getAppointmentTimeColumn() {
         return appointmentTimeColumn;
     }
 
     @Override
-    public TableColumn<ServiceAppointment, String> getAppointmentCustomerColumn() {
+    public TableColumn<Appointment, String> getAppointmentCustomerColumn() {
         return appointmentCustomerColumn;
     }
 
     @Override
-    public TableColumn<ServiceAppointment, String> getAppointmentServicesColumn() {
+    public TableColumn<Appointment, String> getAppointmentServicesColumn() {
         return appointmentServicesColumn;
     }
 
     @Override
-    public TableColumn<ServiceAppointment, String> getAppointmentCreatedColumn() {
+    public TableColumn<Appointment, String> getAppointmentCreatedColumn() {
         return appointmentCreatedColumn;
     }
 
     @Override
-    public TableColumn<ServiceAppointment, String> getAppointmentEmployeePositionColumn() {
+    public TableColumn<Appointment, String> getAppointmentEmployeePositionColumn() {
         return appointmentEmployeePositionColumn;
     }
 
