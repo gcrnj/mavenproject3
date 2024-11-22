@@ -118,11 +118,9 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="970.0">
                      <children>
-                        <TableView fx:id="appointmentsTableView1" layoutY="60.0" prefHeight="430.0" prefWidth="970.0">
+                        <TableView fx:id="vehiclesTableView" layoutY="60.0" prefHeight="430.0" prefWidth="970.0">
                            <columns>
-                              <TableColumn fx:id="appointmentDateColumn1" prefWidth="523.2000671625137" text="Vehicle Name" />
-                              <TableColumn fx:id="appointmentCreatedColumn1" prefWidth="280.79998779296875" text="Created by" />
-                              <TableColumn fx:id="appointmentEmployeePositionColumn1" prefWidth="166.39992675781252" text="Position" />
+                              <TableColumn fx:id="vehicleNameColumn" prefWidth="966.9999939203262" text="Vehicles" />
                            </columns>
                         </TableView>
                         <Button layoutX="23.0" layoutY="22.0" mnemonicParsing="false" onAction="#openVehicleForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
@@ -133,7 +131,6 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <TextField layoutX="106.0" layoutY="21.0" prefHeight="26.0" prefWidth="188.0" promptText="Search Vehicle" />
                      </children>
                   </AnchorPane>
                </content>

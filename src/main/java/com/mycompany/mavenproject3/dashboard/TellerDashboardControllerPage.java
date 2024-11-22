@@ -31,7 +31,7 @@ import javafx.stage.Stage;
  *
  * @author GNew
  */
-public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, Refreshable {
+public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, VehiclesPage, Refreshable {
 
 //    @FXML
 //    public Text userName, userPosition, date;
@@ -49,6 +49,11 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     public TableColumn<Service, String> serviceNameColumn, servicePriceColumn, serviceWheelsColumn, serviceDescriptionColumn;
     @FXML
     public TableColumn<Service, Boolean> isAvailableColumn;
+
+    @FXML
+    public TableView<Vehicle> vehiclesTableView;
+    @FXML
+    public TableColumn<Vehicle, String> vehicleNameColumn;
 
     @FXML
     ImageView profileImageView;
@@ -99,6 +104,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
         initUpperDetails();
         loadAppointments();
         loadServices();
+        loadVehicles();
     }
 
     private void initUpperDetails() {
@@ -128,7 +134,23 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
 
     @FXML
     private void openVehicleForm() {
-        CreateVehicleFormController.startNewScene(this);
+        CreateVehicleFormController.startNewScene(this, null);
+    }
+
+    @Override
+    public void editVehicle(Vehicle vehicle) {
+        CreateVehicleFormController.startNewScene(this, vehicle);
+    }
+
+    @Override
+    public TableView<Vehicle> getVehicleTableView() {
+        return vehiclesTableView;
+    }
+
+    @Override
+    public TableColumn<Vehicle, String> getVehicleNameColumn() {
+        return vehicleNameColumn;
+
     }
 
     @Override

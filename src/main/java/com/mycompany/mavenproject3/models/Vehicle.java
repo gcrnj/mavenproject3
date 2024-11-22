@@ -13,6 +13,7 @@ public class Vehicle {
     public static final String TABLE_NAME = "Vehicles";
     public static final String COL_VEHICLE_ID = "VehicleId";
     public static final String COL_VEHICLE_NAME = "VehicleName";
+    public static final String COL_VEHICLE_DELETED = "IsDeleted";
     public static final String COL_CREATED_BY = "CreatedBy";
     public static final String COL_CREATED_AT = "CreatedAt";
 

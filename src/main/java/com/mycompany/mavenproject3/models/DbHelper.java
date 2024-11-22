@@ -408,26 +408,53 @@ public class DbHelper {
 
     public static String createVehicle(String vehicleName) {
         int createdBy = LocalCache.getEmployee().getEmployeeID();
-        String sql = "INSERT INTO " + Vehicle.TABLE_NAME +
+        String sqlInsert = "INSERT INTO " + Vehicle.TABLE_NAME +
                 " (" + Vehicle.COL_VEHICLE_NAME + ", " + Vehicle.COL_CREATED_BY + ")" +
-                " VALUES (?, ?)";
+                " VALUES (?, ?)";  // Set IsDeleted to 0 when inserting new records
         String error = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, vehicleName);
-            preparedStatement.setInt(2, createdBy);
-            preparedStatement.executeUpdate();
+            // Insert the vehicle directly without checking for duplicates
+            PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
+            insertStatement.setString(1, vehicleName);
+            insertStatement.setInt(2, createdBy);
+            insertStatement.executeUpdate();
+
         } catch (SQLException e) {
             error = e.getMessage();
             e.printStackTrace(); // Handle exceptions properly in production
         }
+
         return error; // Return null if successful, or the error message if not
     }
 
-    public List<Vehicle> getVehicles() {
+
+    public static String editVehicleName(int vehicleId, String newVehicleName) {
+        String sql = "UPDATE " + Vehicle.TABLE_NAME +
+                " SET " + Vehicle.COL_VEHICLE_NAME + " = ? " +
+                "WHERE " + Vehicle.COL_VEHICLE_ID + " = ?";
+        String error = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, newVehicleName); // Set the new vehicle name
+            preparedStatement.setInt(2, vehicleId); // Set the vehicle ID to update
+            preparedStatement.executeUpdate(); // Execute the update query
+        } catch (SQLException e) {
+            error = e.getMessage();
+            e.printStackTrace(); // Handle exceptions properly in production
+        }
+
+        return error; // Return null if successful, or the error message if not
+    }
+
+    public static List<Vehicle> getVehicles() {
         List<Vehicle> vehicles = new ArrayList<>();
-        String sql = "SELECT * FROM " + Vehicle.TABLE_NAME; // SQL query to select all vehicles
+        String sql = "SELECT v.*, e.*, p.* " +
+                "FROM " + Vehicle.TABLE_NAME + " AS v " +
+                "JOIN Employee AS e ON v.CreatedBy = e.EmployeeId " +  // Joining Vehicles with Employee based on CreatedBy (EmployeeId)
+                "JOIN Position AS p ON e.PositionId = p.PositionId " +
+                "WHERE " + Vehicle.COL_VEHICLE_DELETED + " = 0;"; // Joining Employee with Position based on PositionId
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -443,5 +470,48 @@ public class DbHelper {
 
         return vehicles; // Return the list of vehicles
     }
+
+    public static String deleteVehicleById(int vehicleId) {
+        // SQL to check if the vehicle is used in the ServiceVehicle table
+        String checkSql = "SELECT COUNT(*) FROM " + "ServiceVehicle" +
+                " WHERE " + "VehicleID" + " = ?"; // Check if vehicle is referenced in ServiceVehicle table
+
+        // SQL to mark the vehicle as deleted (soft delete)
+        String updateSql = "UPDATE " + Vehicle.TABLE_NAME +
+                " SET " + Vehicle.COL_VEHICLE_DELETED + " = 1 " + // Mark as deleted
+                " WHERE " + Vehicle.COL_VEHICLE_ID + " = ?";
+
+        // SQL to completely delete the vehicle (hard delete)
+        String deleteSql = "DELETE FROM " + Vehicle.TABLE_NAME +
+                " WHERE " + Vehicle.COL_VEHICLE_ID + " = ?";
+
+        String error = null;
+
+        try {
+            // Check if the vehicle is used in the ServiceVehicle table
+            PreparedStatement checkStatement = connection.prepareStatement(checkSql);
+            checkStatement.setInt(1, vehicleId); // Set the vehicle ID to check
+            ResultSet resultSet = checkStatement.executeQuery();
+
+            if (resultSet.next() && resultSet.getInt(1) > 0) {
+                // If the vehicle is referenced in the ServiceVehicle table, perform soft delete (set IsDeleted = 1)
+                PreparedStatement updateStatement = connection.prepareStatement(updateSql);
+                updateStatement.setInt(1, vehicleId); // Set the vehicle ID to mark as deleted
+                updateStatement.executeUpdate();
+            } else {
+                // If the vehicle is not referenced in the ServiceVehicle table, perform hard delete
+                PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
+                deleteStatement.setInt(1, vehicleId); // Set the vehicle ID to delete completely
+                deleteStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            error = e.getMessage();
+            e.printStackTrace(); // Handle exceptions properly in production
+        }
+
+        return error; // Return null if successful, or the error message if not
+    }
+
+
 
 }

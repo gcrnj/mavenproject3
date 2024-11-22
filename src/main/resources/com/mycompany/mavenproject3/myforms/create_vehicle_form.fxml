@@ -6,16 +6,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateVehicleFormController">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Vehicle Name" />
-      <JFXTextField fx:id="vehicleTextField" prefHeight="26.0" prefWidth="216.0" />
       <Text fill="#fa2727" strokeType="OUTSIDE" strokeWidth="0.0">
          <VBox.margin>
-            <Insets top="25.0" />
+            <Insets />
          </VBox.margin>
       </Text>
+      <JFXTextField fx:id="vehicleTextField" onAction="#onSaveClick" prefHeight="26.0" prefWidth="216.0" promptText="Vehicle Name" />
       <HBox alignment="CENTER" prefHeight="26.0" prefWidth="160.0">
          <children>
           <Button alignment="CENTER" mnemonicParsing="false" onAction="#onCancelClick" styleClass="danger" text="Cancel" />

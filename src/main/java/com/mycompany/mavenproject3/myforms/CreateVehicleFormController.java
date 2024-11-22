@@ -2,12 +2,15 @@ package com.mycompany.mavenproject3.myforms;
 
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
+import com.mycompany.mavenproject3.dashboard.VehiclesPage;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.DbHelper;
+import com.mycompany.mavenproject3.models.Vehicle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -20,12 +23,13 @@ public class CreateVehicleFormController {
     JFXTextField vehicleTextField;
     RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
 
-    Refreshable refreshable;
-
+    private VehiclesPage vehiclesPage;
+    private Vehicle vehicle;
 
     Stage stage;
+    Alert errorAlert;
 
-    public static void startNewScene(Refreshable refreshable) {
+    public static void startNewScene(VehiclesPage vehiclesPage, Vehicle vehicle) {
         // Load the new FXML for the new window
         try {
             FXMLLoader loader = new FXMLLoader(CreateVehicleFormController.class.getResource("create_vehicle_form.fxml"));
@@ -33,7 +37,7 @@ public class CreateVehicleFormController {
             Parent root = loader.load();
 
             CreateVehicleFormController controller = loader.getController();
-            controller.refreshable = refreshable;
+            controller.setVehicle(vehicle, vehiclesPage);
 
             // Create a new Stage (window)
             Stage stage = new Stage();
@@ -57,19 +61,42 @@ public class CreateVehicleFormController {
         vehicleTextField.getValidators().add(requiredFieldValidator);
     }
 
+    public void setVehicle(Vehicle vehicle, VehiclesPage vehiclesPage) {
+        this.vehicle = vehicle;
+        this.vehiclesPage = vehiclesPage;
+        if (vehicle != null) {
+            vehicleTextField.setText(vehicle.getVehicleName());
+        }
+    }
+
     @FXML
     private void onCancelClick() {
-
+        stage.close();
     }
 
     @FXML
     private void onSaveClick() {
-        String error = DbHelper.createVehicle(vehicleTextField.getText());
-        if(error != null) {
-            refreshable.refresh();
+        String error = "";
+        if (vehicle != null) {
+            // Edit
+            error = DbHelper.editVehicleName(vehicle.getVehicleId(), vehicleTextField.getText());
+        } else {
+            // Create
+            error = DbHelper.createVehicle(vehicleTextField.getText());
+        }
+        if (error == null) {
+            vehiclesPage.refreshVehicles();
             stage.close();
         } else {
-
+            showError(error);
         }
+    }
+
+    private void showError(String error) {
+        if (errorAlert == null) {
+            errorAlert = new Alert(Alert.AlertType.ERROR);
+        }
+        errorAlert.setContentText(error);
+        errorAlert.showAndWait();
     }
 }
