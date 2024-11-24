@@ -14,12 +14,8 @@ public class DbHelper {
     private static Connection connection;
 
     public static void connect() throws SQLException {
-        String un = "CLAWS\\GNew";
-        String connectionUrl = "jdbc:sqlserver://CLAWS:1433;"
-                + "Database=superspeed_db;"
-                + "encrypt=true;"
-                + "trustServerCertificate=true;"
-                + "integratedSecurity=true;";
+        String un = "XEMNAS\\GNew";
+        String connectionUrl = "jdbc:sqlserver://XEMNAS:1433;databaseName=superspeed_db;encrypt=true;trustServerCertificate=true;integratedSecurity=true;";
         // Make connection
         connection = DriverManager.getConnection(connectionUrl);
     }
@@ -142,6 +138,10 @@ public class DbHelper {
         }
 
         return services; // Return the list of services
+    }
+
+    public static Connection getConnection() {
+        return null;
     }
 
     // Method to retrieve all products

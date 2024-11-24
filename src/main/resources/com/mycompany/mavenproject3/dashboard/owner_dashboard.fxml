@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.mycompany.mavenproject3.dashboard.OwnerController">
+    <TableView fx:id="ownerTable">
+        <columns>
+            <TableColumn text="Owner ID" fx:id="colOwnerId" />
+            <TableColumn text="Name" fx:id="colName" />
+            <TableColumn text="Contact Info" fx:id="colContact" />
+        </columns>
+    </TableView>
+    <HBox spacing="10">
+        <TextField fx:id="txtOwnerId" promptText="Owner ID" />
+        <TextField fx:id="txtName" promptText="Name" />
+        <TextField fx:id="txtContact" promptText="Contact Info" />
+    </HBox>
+    <HBox spacing="10">
+        <Button text="Add" onAction="#handleAdd" />
+        <Button text="Edit" onAction="#handleEdit" />
+        <Button text="Delete" onAction="#handleDelete" />
+        <Button text="Save" onAction="#handleSave" />
+    </HBox>
+</VBox>
