@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -46,11 +47,15 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     public TableColumn<Service, String> serviceNameColumn, servicePriceColumn, serviceWheelsColumn, serviceDescriptionColumn;
     @FXML
     public TableColumn<Service, Boolean> isAvailableColumn;
+    @FXML
+    public Button serviceCreateButton;
 
     @FXML
     public TableView<Vehicle> vehiclesTableView;
     @FXML
     public TableColumn<Vehicle, String> vehicleNameColumn;
+    @FXML
+    public Button vehicleCreateButton;
 
     @FXML
     ImageView profileImageView;
@@ -112,6 +117,10 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
         Image image = new Image(getClass().getResource("/images/abc.png").toExternalForm());
         profileImageView.setImage(image);
 
+        // Teller-only visibility
+        boolean isTeller = LocalCache.isTeller();
+        serviceCreateButton.setVisible(!isTeller);
+        vehicleCreateButton.setVisible(!isTeller);
     }
 
     @FXML

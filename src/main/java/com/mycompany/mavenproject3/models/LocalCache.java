@@ -32,8 +32,8 @@ public class LocalCache {
         return employee != null && employee.getPosition().getPositionName().equals("Manager");
     }
 
-    public static boolean isEmployee() {
-        return employee != null && employee.getPosition().getPositionName().equals("Employee");
+    public static boolean isTeller() {
+        return employee != null && employee.getPosition().getPositionName().equals("Teller");
     }
 
     public static boolean isOwner() {
