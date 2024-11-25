@@ -109,23 +109,27 @@ public class DbHelper {
                 + "JOIN " + Service.TABLE_NAME + " s ON asv.ServiceId = s.ServiceID ";
 
         System.out.println(sql);
-        // Dynamically build the WHERE clause based on the flags
+// Dynamically build the WHERE clause based on the flags
         List<String> conditions = new ArrayList<>();
+        List<String> statusConditions = new ArrayList<>();  // Separate list for status conditions
+
+// Add status filters to the statusConditions list
         if (scheduled) {
-            conditions.add("sa.Status = 'SCHEDULED' ");
+            statusConditions.add("sa.Status = 'SCHEDULED'");
         }
         if (completed) {
-            conditions.add("sa.Status = 'COMPLETED' ");
+            statusConditions.add("sa.Status = 'COMPLETED'");
         }
         if (canceled) {
-            conditions.add("sa.Status = 'CANCELED' ");
+            statusConditions.add("sa.Status = 'CANCELED'");
         }
 
-        if(!conditions.isEmpty()) {
-            conditions.add(" AND ");
+// If there are any status conditions, use OR to combine them
+        if (!statusConditions.isEmpty()) {
+            conditions.add("(" + String.join(" OR ", statusConditions) + ")");
         }
 
-        // Date range filter
+// Date range filter (AND logic)
         if (from != null && to != null) {
             conditions.add("CAST(sa.AppointmentDateTime AS DATE) BETWEEN ? AND ?");
         } else if (from != null) {
@@ -134,10 +138,11 @@ public class DbHelper {
             conditions.add("CAST(sa.AppointmentDateTime AS DATE) <= ?");
         }
 
-
+// If there are conditions, build the WHERE clause
         if (!conditions.isEmpty()) {
-            sql += "WHERE " + String.join(" OR ", conditions);
+            sql += " WHERE " + String.join(" AND ", conditions);
         }
+
         sql += ";";
 
         try {
@@ -656,6 +661,87 @@ public class DbHelper {
         return error; // Return null if successful, or the error message if not
     }
 
+
+    public static String editAppointment(
+            int appointmentId,
+            ObservableList<Service> services,
+            int customerId,
+            int employeeId,
+            LocalDateTime dateTime) {
+        String updated = AppointmentStatus.SCHEDULED.name();
+        String sql = "UPDATE " + Appointment.TABLE_NAME +
+                " SET CustomerID = ?, EmployeeID = ?, AppointmentDateTime = ?, Status = ?" +
+                " WHERE AppointmentID = ?";
+        String error = null;
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, customerId);
+            preparedStatement.setInt(2, employeeId);
+            preparedStatement.setString(3, dateTime.format(formatter));
+            preparedStatement.setString(4, updated);
+            preparedStatement.setInt(5, appointmentId);
+
+            // Execute the update
+            preparedStatement.executeUpdate();
+
+            // Clear and update AppointmentServices for this appointment
+            error = clearAppointmentServices(appointmentId);
+            if (error == null) {
+                error = createAppointmentServices(appointmentId, services);
+            }
+
+        } catch (SQLException e) {
+            error = e.getMessage();
+            e.printStackTrace(); // Handle exceptions properly in production
+        }
+
+        return error; // Return null if successful, or the error message if not
+    }
+
+    private static String clearAppointmentServices(int appointmentId) {
+        String sql = "DELETE FROM AppointmentServices WHERE AppointmentID = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, appointmentId);
+            preparedStatement.executeUpdate();
+            return null; // Return null if successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return e.getMessage(); // Return error message if an exception occurs
+        }
+    }
+
+
+
+    public static void updateAppointmentStatus(AppointmentStatus appointmentStatus, int appointmentId) {
+        // SQL to update the status of an appointment
+        String updateSql = "UPDATE " + Appointment.TABLE_NAME + " SET Status = ? WHERE AppointmentID = ?";
+        System.out.println("updateAppointmentStatus = " + updateSql);
+        System.out.println("updateAppointmentStatus = " + appointmentStatus);
+        System.out.println("updateAppointmentStatus = " + appointmentId);
+        try {
+            // Prepare the SQL statement
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
+
+            // Set the parameters: new status and appointment ID
+            preparedStatement.setString(1, appointmentStatus.name()); // Assuming getStatus() returns a string
+            preparedStatement.setInt(2, appointmentId); // Assuming getAppointmentId() returns an int
+
+            // Execute the update
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Appointment status updated successfully.");
+            } else {
+                System.out.println("No appointment found with the specified ID.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log or handle exceptions appropriately
+            System.out.println("Error updating appointment status: " + e.getMessage());
+        }
+    }
 
 
 }

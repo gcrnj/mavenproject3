@@ -15,10 +15,7 @@ import com.jfoenix.controls.JFXTextField;
 import com.mycompany.mavenproject3.dashboard.CustomerItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceItemController;
 import com.mycompany.mavenproject3.dashboard.ServicesPage;
-import com.mycompany.mavenproject3.models.Customer;
-import com.mycompany.mavenproject3.models.DbHelper;
-import com.mycompany.mavenproject3.models.LocalCache;
-import com.mycompany.mavenproject3.models.Service;
+import com.mycompany.mavenproject3.models.*;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -31,7 +28,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -59,6 +55,7 @@ public class CreateAppointmentFormController {
     @FXML
     private ComboBox<String> hourTimePicker, minutePicker, amOrPmPicker;
     Stage stage;
+    private Appointment appointment;
 
     ObservableList<Service> selectedServices = FXCollections.observableArrayList();
     SimpleObjectProperty<Customer> selectedCustomer = new SimpleObjectProperty<>();
@@ -134,7 +131,7 @@ public class CreateAppointmentFormController {
         }
     }
 
-    public static void startNewScene(ServicesPage servicesPage) {
+    public static void startNewScene(ServicesPage servicesPage, Appointment appointment) {
         // Load the new FXML for the new window
         try {
             // Create an FXMLLoader instance
@@ -152,6 +149,7 @@ public class CreateAppointmentFormController {
             stage.show();  // Show the new window
             CreateAppointmentFormController controller = loader.getController();
             controller.servicesPage = servicesPage;
+            controller.setAppointment(appointment);
             controller.setStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -169,6 +167,23 @@ public class CreateAppointmentFormController {
         reloadCustomersList(customerSearchTextField.getText());
         initDatePicker();
         reloadServicesList();
+    }
+
+    private void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+
+        if (appointment != null) {
+            customersVbox.setDisable(true);
+            selectedCustomer.set(appointment.getCustomer());
+            serviceDatePicker.setValue(appointment.getDate());
+            hourTimePicker.setValue(appointment.getHour());
+            minutePicker.setValue(appointment.getMinute());
+            amOrPmPicker.setValue(appointment.getAmPm());
+            selectedServices.removeAll();
+            selectedServices.addAll(appointment.getServices());
+            reloadServicesList();
+
+        }
     }
 
     @FXML
@@ -286,12 +301,26 @@ public class CreateAppointmentFormController {
                 finalHour += 12;
             }
             // Add to db
-            String error = DbHelper.createAppointment(
-                    selectedServices,
-                    selectedCustomer.getValue().getCustomerID(),
-                    LocalCache.getEmployee().getEmployeeID(),
-                    selectedDate.get().atTime(finalHour, Integer.parseInt(selectedMinute.getValue()))
-            );
+            String error = null;
+
+            if (appointment == null) {
+                // Create
+                error = DbHelper.createAppointment(
+                        selectedServices,
+                        selectedCustomer.getValue().getCustomerID(),
+                        LocalCache.getEmployee().getEmployeeID(),
+                        selectedDate.get().atTime(finalHour, Integer.parseInt(selectedMinute.getValue()))
+                );
+            } else {
+                // Edit
+                error = DbHelper.editAppointment(
+                        appointment.getAppointmentID(),
+                        selectedServices,
+                        selectedCustomer.getValue().getCustomerID(),
+                        LocalCache.getEmployee().getEmployeeID(),
+                        selectedDate.get().atTime(finalHour, Integer.parseInt(selectedMinute.getValue()))
+                );
+            }
             if (error == null) {
                 // No error
                 servicesPage.refresh();
@@ -300,5 +329,10 @@ public class CreateAppointmentFormController {
                 // Show error
             }
         }
+    }
+
+    @FXML
+    public void onCancelClicked() {
+        stage.close();
     }
 }

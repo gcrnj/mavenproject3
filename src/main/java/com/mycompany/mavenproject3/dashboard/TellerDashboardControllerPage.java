@@ -150,7 +150,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
 
     @FXML
     private void openAppointmentForm() {
-        CreateAppointmentFormController.startNewScene(this);
+        CreateAppointmentFormController.startNewScene(this, null);
     }
 
     @FXML
@@ -182,6 +182,11 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @Override
     public void refresh() {
         initialize();
+    }
+
+    @Override
+    public void onEditAppointment(Appointment appointment) {
+        CreateAppointmentFormController.startNewScene(this, appointment);
     }
 
     @FXML

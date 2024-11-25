@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +56,7 @@ public interface AppointmentsPage extends Refreshable {
         //
         ObservableList<Appointment> observableAppointments = Util.getObservableList(appointments);
         //
-        getAppointmentDateColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
+        getAppointmentDateColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDateString()));
         getAppointmentTimeColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTime()));
         getAppointmentCustomerColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getFullName()));
         getAppointmentServicesColumn().setCellValueFactory(cellData -> {
@@ -102,8 +101,7 @@ public interface AppointmentsPage extends Refreshable {
             TableRow<Appointment> row = new TableRow<>();
             ContextMenu contextMenu = new ContextMenu();
             MenuItem editOption = new MenuItem("Edit");
-            MenuItem deleteOption = new MenuItem("Delete");
-            contextMenu.getItems().addAll(editOption, deleteOption);
+            MenuItem cancelOption = new MenuItem("Cancel");
 
 
             MenuItem markAsCompletedOption = new MenuItem("Mark as Completed");
@@ -114,10 +112,10 @@ public interface AppointmentsPage extends Refreshable {
                     // Check if the current service appointment is active
                     Appointment selectedItem = row.getItem();
                     if (selectedItem != null && selectedItem.getStatus() == AppointmentStatus.SCHEDULED) { // Assuming isActive() is a method in ServiceAppointment
-                        contextMenu.getItems().add(markAsCompletedOption);
+                        contextMenu.getItems().addAll(editOption, cancelOption, markAsCompletedOption);
                     } else {
                         // Ensure the "Mark as Completed" option is not shown if the appointment is not active
-                        contextMenu.getItems().remove(markAsCompletedOption);
+                        contextMenu.getItems().removeAll(editOption, cancelOption, markAsCompletedOption);
                     }
                     row.getContextMenu().show(row, event.getScreenX(), event.getScreenY());
                 }
@@ -127,19 +125,15 @@ public interface AppointmentsPage extends Refreshable {
             editOption.setOnAction(e -> {
                 Appointment selectedItem = row.getItem();
                 if (selectedItem != null) {
-                    System.out.println("Edit selected: " + selectedItem.getServices().get(0).getServiceName());
-                } else {
-                    System.out.println("No item selected for Edit");
+                    onEditAppointment(selectedItem);
                 }
             });
 
-            deleteOption.setOnAction(e -> {
+            cancelOption.setOnAction(e -> {
                 Appointment selectedItem = row.getItem();
                 if (selectedItem != null) {
-                    observableAppointments.remove(selectedItem); // Remove from observableAppointments
-                    System.out.println("Deleted: " + selectedItem);
-                } else {
-                    System.out.println("No item selected for Delete");
+                    // Update the status of the appointment to completed
+                    onCancelAppointment(selectedItem);
                 }
             });
 
@@ -147,9 +141,7 @@ public interface AppointmentsPage extends Refreshable {
                 Appointment selectedItem = row.getItem();
                 if (selectedItem != null) {
                     // Update the status of the appointment to completed
-                    System.out.println("Marked as completed: " + selectedItem);
-                } else {
-                    System.out.println("No item selected for Mark as Completed");
+                    onCompleteAppointment(selectedItem);
                 }
             });
 
@@ -168,6 +160,18 @@ public interface AppointmentsPage extends Refreshable {
 
     @Override
     default void refresh() {
+        loadAppointments();
+    }
+
+    void onEditAppointment(Appointment appointment);
+
+    private void onCancelAppointment(Appointment appointment) {
+        DbHelper.updateAppointmentStatus(AppointmentStatus.CANCELED, appointment.getAppointmentID());
+        loadAppointments();
+    }
+
+    private void onCompleteAppointment(Appointment appointment) {
+        DbHelper.updateAppointmentStatus(AppointmentStatus.COMPLETED, appointment.getAppointmentID());
         loadAppointments();
     }
 }

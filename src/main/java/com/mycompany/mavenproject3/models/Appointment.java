@@ -7,6 +7,7 @@ package com.mycompany.mavenproject3.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Appointment {
     public static final String COL_STATUS = "Status";
 
     private final int serviceAppointmentID;
-    private final Customer customer;
+    private Customer customer;
     private final Employee employee;
     private final Timestamp appointmentDateTime;
     private final AppointmentStatus status;
@@ -63,12 +64,28 @@ public class Appointment {
         return appointmentDateTime.toLocalDateTime().toString();
     }
 
-    public String getDate() {
+    public String getDateString() {
         return appointmentDateTime.toLocalDateTime().format(dateFormatter);
+    }
+
+    public LocalDate getDate() {
+        return appointmentDateTime.toLocalDateTime().toLocalDate();
     }
 
     public String getTime() {
         return appointmentDateTime.toLocalDateTime().format(timeFormatter);
+    }
+
+    public String getHour() {
+        return appointmentDateTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("h"));
+    }
+
+    public String getMinute() {
+        return appointmentDateTime.toLocalDateTime().format( DateTimeFormatter.ofPattern("mm"));
+    }
+
+    public String getAmPm() {
+        return appointmentDateTime.toLocalDateTime().format( DateTimeFormatter.ofPattern("a"));
     }
 
 
@@ -76,6 +93,9 @@ public class Appointment {
         return employee;
     }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
     public Customer getCustomer() {
         return customer;
     }
