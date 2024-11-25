@@ -4,6 +4,7 @@ import com.mycompany.mavenproject3.utils.PasswordUtils;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -90,7 +91,9 @@ public class DbHelper {
     public static List<Appointment> getAppointments(
             boolean scheduled,
             boolean completed,
-            boolean canceled
+            boolean canceled,
+            LocalDate from,
+            LocalDate to
     ) {
         List<Appointment> appointments = new ArrayList<>();
         String sql = "SELECT sa.*, "
@@ -117,13 +120,37 @@ public class DbHelper {
         if (canceled) {
             conditions.add("sa.Status = 'CANCELED' ");
         }
+
+        if(!conditions.isEmpty()) {
+            conditions.add(" AND ");
+        }
+
+        // Date range filter
+        if (from != null && to != null) {
+            conditions.add("CAST(sa.AppointmentDateTime AS DATE) BETWEEN ? AND ?");
+        } else if (from != null) {
+            conditions.add("CAST(sa.AppointmentDateTime AS DATE) >= ?");
+        } else if (to != null) {
+            conditions.add("CAST(sa.AppointmentDateTime AS DATE) <= ?");
+        }
+
+
         if (!conditions.isEmpty()) {
             sql += "WHERE " + String.join(" OR ", conditions);
         }
         sql += ";";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
-
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            if (from != null && to != null) {
+                preparedStatement.setDate(1, java.sql.Date.valueOf(from));
+                preparedStatement.setDate(2, java.sql.Date.valueOf(to));
+            } else if (from != null) {
+                preparedStatement.setDate(1, java.sql.Date.valueOf(from));
+            } else if (to != null) {
+                preparedStatement.setDate(1, java.sql.Date.valueOf(to));
+            }
+            ResultSet resultSet = preparedStatement.executeQuery();
             // Loop through the result set and create Appointment objects
             while (resultSet.next()) {
                 Appointment appointment = new Appointment(resultSet, false);

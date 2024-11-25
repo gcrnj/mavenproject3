@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +40,18 @@ public interface AppointmentsPage extends Refreshable {
 
     CheckBox getCanceledCheckBox();
 
+    DatePicker getAppointmentsFromDatePicker();
+
+    DatePicker getAppointmentsToDatePicker();
+
     default void loadAppointments() {
 
         List<Appointment> appointments = DbHelper.getAppointments(
                 getScheduledCheckBox().isSelected(),
                 getCompletedCheckBox().isSelected(),
-                getCanceledCheckBox().isSelected()
+                getCanceledCheckBox().isSelected(),
+                getAppointmentsFromDatePicker().getValue(),
+                getAppointmentsToDatePicker().getValue()
         ); // Retrieve appointments
         System.out.println("Appointments: " + appointments.size());
         //

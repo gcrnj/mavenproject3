@@ -14,10 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -40,6 +37,9 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     public TableView<Appointment> appointmentsTableView;
     @FXML
     public TableColumn<Appointment, String> appointmentDateColumn, appointmentTimeColumn, appointmentCustomerColumn, appointmentServicesColumn, appointmentCreatedColumn, appointmentEmployeePositionColumn;
+
+    @FXML
+    DatePicker appointmentFromDatePicker, appointmentToDatePicker;
 
     @FXML
     public TableView<Service> serviceTableView;
@@ -86,6 +86,16 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
         return canceledCheckBox;
     }
 
+    @Override
+    public DatePicker getAppointmentsFromDatePicker() {
+        return appointmentFromDatePicker;
+    }
+
+    @Override
+    public DatePicker getAppointmentsToDatePicker() {
+        return appointmentToDatePicker;
+    }
+
     public static void startNewScene() throws IOException {
         // Load the new FXML for the new window
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(TellerDashboardControllerPage.class.getResource("teller_dashboard_1.fxml")));
@@ -99,6 +109,16 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
         stage.setResizable(false);
         stage.show();  // Show the new window
         controller.stage = stage;
+    }
+
+    @FXML
+    public void onAppointmentFrom() {
+        loadAppointments();
+    }
+
+    @FXML
+    public void onAppointmentTo() {
+        loadAppointments();
     }
 
     @FXML
