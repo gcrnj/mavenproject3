@@ -27,7 +27,7 @@
                   <Font name="System Bold Italic" size="28.0" />
                </font>
             </Text>
-            <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="206.0" promptText="Username" text="justin">
+            <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="206.0" promptText="Username" text="naoki">
                <VBox.margin>
                   <Insets bottom="10.0" top="15.0" />
                </VBox.margin>
@@ -39,12 +39,12 @@
             </TextField>
             <HBox alignment="CENTER" prefHeight="42.0" prefWidth="308.0">
                <children>
-                  <RadioButton mnemonicParsing="false" selected="true" text="Teller" textFill="WHITE">
+                  <RadioButton mnemonicParsing="false" text="Teller" textFill="WHITE">
                      <toggleGroup>
                         <ToggleGroup fx:id="role" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Manager" textFill="WHITE" toggleGroup="$role">
+                  <RadioButton mnemonicParsing="false" selected="true" text="Manager" textFill="WHITE" toggleGroup="$role">
                      <HBox.margin>
                         <Insets left="15.0" right="15.0" />
                      </HBox.margin>

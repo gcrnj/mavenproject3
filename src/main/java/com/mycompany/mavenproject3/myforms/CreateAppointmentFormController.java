@@ -85,6 +85,7 @@ public class CreateAppointmentFormController {
                 .collect(Collectors.toList()); // Collect the stream into a List
 
         services.removeIf(service -> selectedServiceIds.contains(service.getServiceID()));
+        services.removeIf(service -> !service.isIsAvailable());
 
         try {
             for (Service service : services) {

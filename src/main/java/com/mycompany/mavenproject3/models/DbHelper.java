@@ -486,6 +486,50 @@ public class DbHelper {
         return error; // Return null if successful, or the error message if not
     }
 
+    public static String editService(int serviceId, String serviceName, double price, String description, List<Vehicle> vehicles, boolean isAvailable) {
+        String updateServiceSql = "UPDATE " + Service.TABLE_NAME +
+                " SET ServiceName = ?, Price = ?, Description = ?, IsAvailable = ? " +
+                " WHERE " + Service.COL_SERVICE_ID + " = ?";
+        String deleteServiceVehiclesSql = "DELETE FROM ServiceVehicle WHERE ServiceID = ?";
+        String insertServiceVehicleSql = "INSERT INTO ServiceVehicle (ServiceID, VehicleID) VALUES (?, ?)";
+
+        String error = null;
+
+        try {
+            // Update the service details
+            PreparedStatement updateServiceStatement = connection.prepareStatement(updateServiceSql);
+            updateServiceStatement.setString(1, serviceName);
+            updateServiceStatement.setDouble(2, price);
+            updateServiceStatement.setString(3, description);
+            updateServiceStatement.setBoolean(4, isAvailable);
+            updateServiceStatement.setInt(5, serviceId);
+
+            int rowsAffected = updateServiceStatement.executeUpdate();
+            if (rowsAffected == 0) {
+                return "Error: No rows affected while updating service.";
+            }
+
+            // Delete existing vehicle associations for the service
+            PreparedStatement deleteServiceVehiclesStatement = connection.prepareStatement(deleteServiceVehiclesSql);
+            deleteServiceVehiclesStatement.setInt(1, serviceId);
+            deleteServiceVehiclesStatement.executeUpdate();
+
+            // Re-insert the updated vehicle associations
+            for (Vehicle vehicle : vehicles) {
+                PreparedStatement insertServiceVehicleStatement = connection.prepareStatement(insertServiceVehicleSql);
+                insertServiceVehicleStatement.setInt(1, serviceId);  // Set the service ID
+                insertServiceVehicleStatement.setInt(2, vehicle.getVehicleId());  // Set the Vehicle ID
+                insertServiceVehicleStatement.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            error = e.getMessage();
+            e.printStackTrace(); // Handle exceptions properly in production
+        }
+
+        return error; // Return null if successful, or the error message if not
+    }
+
 
     public static List<Province> getProvinces() {
         List<Province> provinces = new ArrayList<>();
@@ -741,6 +785,29 @@ public class DbHelper {
             e.printStackTrace(); // Log or handle exceptions appropriately
             System.out.println("Error updating appointment status: " + e.getMessage());
         }
+    }
+
+    public static String changeServiceAvailability(int serviceId, boolean isAvailableNewValue) {
+        // SQL to mark the service as deleted (soft delete)
+        int newAvailability = isAvailableNewValue ? 1 : 0;
+        String updateSql = "UPDATE " + Service.TABLE_NAME +
+                " SET " + Service.COL_IS_AVAILABLE + " = ? " +
+                " WHERE " + Service.COL_SERVICE_ID + " = ? ";
+
+        String error = null;
+
+        try {
+            PreparedStatement updateStatement = connection.prepareStatement(updateSql);
+            updateStatement.setInt(1, newAvailability);
+            updateStatement.setInt(2, serviceId);
+            updateStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            error = e.getMessage();
+            e.printStackTrace(); // Handle exceptions properly in production
+        }
+
+        return error; // Return null if successful, or the error message if not
     }
 
 

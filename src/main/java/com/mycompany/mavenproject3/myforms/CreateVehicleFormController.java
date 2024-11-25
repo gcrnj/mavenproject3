@@ -77,6 +77,9 @@ public class CreateVehicleFormController {
     @FXML
     private void onSaveClick() {
         String error = "";
+        if(!vehicleTextField.validate()) {
+            return;
+        }
         if (vehicle != null) {
             // Edit
             error = DbHelper.editVehicleName(vehicle.getVehicleId(), vehicleTextField.getText());

@@ -46,7 +46,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @FXML
     public TableColumn<Service, String> serviceNameColumn, servicePriceColumn, serviceWheelsColumn, serviceDescriptionColumn;
     @FXML
-    public TableColumn<Service, Boolean> isAvailableColumn;
+    public TableColumn<Service, String> isAvailableColumn;
     @FXML
     public Button serviceCreateButton;
 
@@ -155,7 +155,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
 
     @FXML
     private void openServicesForm() {
-        CreateServiceFormController.startNewScene(this);
+        CreateServiceFormController.startNewScene(this, null);
     }
 
     @FXML
@@ -182,6 +182,11 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @Override
     public void refresh() {
         initialize();
+    }
+
+    @Override
+    public void editService(Service service) {
+        CreateServiceFormController.startNewScene(this, service);
     }
 
     @Override
@@ -227,7 +232,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     }
 
     @Override
-    public TableColumn<Service, Boolean> getIsAvailableColumn() {
+    public TableColumn<Service, String> getIsAvailableColumn() {
         return isAvailableColumn;
     }
 

@@ -73,9 +73,16 @@ public interface AppointmentsPage extends Refreshable {
         getAppointmentCreatedColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmployee().getFullName()));
         getAppointmentEmployeePositionColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmployee().getPosition().getPositionName()));
         if (appointments.isEmpty()) {
-            getAppointmentsCountText().setText("There are NO scheduled appointments");
+            getAppointmentsCountText().setText("There are NO record found");
         } else {
-            getAppointmentsCountText().setText("There are " + appointments.size() + " scheduled appointments");
+            int size = appointments.size();
+            String record;
+            if(size > 1) {
+                record = "record";
+            } else {
+                record = "records";
+            }
+            getAppointmentsCountText().setText("There are " + appointments.size() + record + " found");
         }
         getAppointmentsTableView().setItems(observableAppointments);
         createOptions(observableAppointments); // Pass observableAppointments to createOptions
