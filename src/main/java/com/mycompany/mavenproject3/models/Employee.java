@@ -26,6 +26,7 @@ public class Employee {
     public static final String COL_BLDG = "Building";
     public static final String COL_USERNAME = "Username";
     public static final String COL_BRGY_ID = "BrgyID";
+    public static final String COL_IS_DELETED = "IsEmployeeDeleted";
 
     private int employeeID;
     private String firstName;

@@ -37,7 +37,8 @@ public class DbHelper {
                 sql = "SELECT e.*, p.* FROM " + Employee.TABLE_NAME + " e "
                         + "JOIN " + Position.TABLE_NAME + " p ON e.positionId = p.PositionID "
                         + "WHERE e.username = ? "
-                        + "AND p.positionName = ?;";
+                        + "AND p.positionName = ?"
+                        + "AND e." + Employee.COL_IS_DELETED + " = 0";
                 break;
 
             case "customer":
@@ -1031,9 +1032,10 @@ public class DbHelper {
     public static List<Employee> getEmployees() {
         List<Employee> employees = new ArrayList<>();
         String query = "SELECT e.*, p.* FROM " + Employee.TABLE_NAME + " e "
-                + "JOIN " + Position.TABLE_NAME + " p ON e.positionId = p.PositionID "; // Your query to fetch employees
+                + "JOIN " + Position.TABLE_NAME + " p ON e.positionId = p.PositionID "
+                + "WHERE " + Employee.COL_IS_DELETED + "=0 "; // Your query to fetch employees
 
-        String managerWhere = " WHERE PositionName = 'Teller'";
+        String managerWhere = " AND PositionName = 'Teller'";
         if (LocalCache.isManager()) {
             query += managerWhere;
         }
@@ -1044,7 +1046,7 @@ public class DbHelper {
             // Loop through the result set and create Employee objects
             while (resultSet.next()) {
                 Employee employee = new Employee(resultSet);
-                if(hasColumn(resultSet, Employee.COL_BRGY_ID)) {
+                if (hasColumn(resultSet, Employee.COL_BRGY_ID)) {
                     employee.setBarangay(getBarangayById(resultSet.getInt(Employee.COL_BRGY_ID)));
                 }
                 employees.add(employee);
@@ -1060,7 +1062,7 @@ public class DbHelper {
 
     // Method to delete an employee by ID
     public static void deleteEmployee(int employeeID) {
-        String query = "DELETE FROM Employee WHERE EmployeeID = ?";
+        String query = "UPDATE " + Employee.TABLE_NAME + " SET " + Employee.COL_IS_DELETED + " = 1 WHERE " + Employee.COL_EMPLOYEE_ID + " = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -1078,6 +1080,7 @@ public class DbHelper {
             // Handle exception (e.g., log the error)
         }
     }
+
     private static boolean hasColumn(ResultSet resultSet, String columnName) {
         try {
             ResultSetMetaData metaData = resultSet.getMetaData();
