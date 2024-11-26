@@ -1095,4 +1095,44 @@ public class DbHelper {
         }
         return false; // Column not found
     }
+
+
+    public static String createCustomer(
+            String firstName,
+            String lastName,
+
+            String contactNumber,
+            String emailAddress,
+
+            Barangay barangay,
+            String houseNumber,
+            String street,
+            String building
+    ) {
+
+        String error = null;
+
+        String sql = "INSERT INTO " + Customer.TABLE_NAME + " values (?,?,  ?,?,  ?,?,?,?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+
+            preparedStatement.setString(3, contactNumber);
+            preparedStatement.setString(4, emailAddress);
+
+            preparedStatement.setInt(5, barangay.getBrgyId());
+            preparedStatement.setString(6, houseNumber);
+            preparedStatement.setString(7, street);
+            preparedStatement.setString(8, building);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            // Handle exceptions
+            e.printStackTrace(); // For debugging
+            error = e.getMessage();
+        }
+        return error; // Return the list of appointments
+    }
 }

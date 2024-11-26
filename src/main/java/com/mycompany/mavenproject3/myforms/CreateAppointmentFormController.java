@@ -282,7 +282,7 @@ public class CreateAppointmentFormController {
     @FXML
     public void openCreateCustomerForm() {
         System.out.println("openCreateCustomerForm");
-        CreateEmployeeController.startNewScene(null, null);
+        CreateCustomerController.startNewScene();
     }
 
     @FXML
