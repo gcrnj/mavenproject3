@@ -4,6 +4,7 @@ import com.mycompany.mavenproject3.StoreLoginController;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.myforms.CreateAppointmentFormController;
+import com.mycompany.mavenproject3.myforms.CreateEmployeeController;
 import com.mycompany.mavenproject3.myforms.CreateServiceFormController;
 
 import java.io.IOException;
@@ -62,6 +63,11 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     public TableColumn<Vehicle, String> vehicleNameColumn;
     @FXML
     public Button vehicleCreateButton;
+
+    @FXML
+    public TableView<Employee> employeesTableView;
+    @FXML
+    public TableColumn<Employee, String> employeeNumberColumn, employeeNameColumn, employeePositionColumn, employeeMobileNumberColumn, employeeEmailAddressColumn;
 
     @FXML
     ImageView profileImageView;
@@ -141,6 +147,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
             dashboardTabPane.getTabs().remove(employeesTab);
             return;
         }
+        loadEmployees();
         // For managers and owners only
 
     }
@@ -193,6 +200,41 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     public TableColumn<Vehicle, String> getVehicleNameColumn() {
         return vehicleNameColumn;
 
+    }
+
+    @Override
+    public TableView<Employee> getEmployeesTableView() {
+        return employeesTableView;
+    }
+
+    @Override
+    public TableColumn<Employee, String> getEmployeeNumberColumn() {
+        return employeeNumberColumn;
+    }
+
+    @Override
+    public TableColumn<Employee, String> getEmployeeNameColumn() {
+        return employeeNameColumn;
+    }
+
+    @Override
+    public TableColumn<Employee, String> getEmployeePositionColumn() {
+        return employeePositionColumn;
+    }
+
+    @Override
+    public TableColumn<Employee, String> getEmployeeMobileNumberColumn() {
+        return employeeMobileNumberColumn;
+    }
+
+    @Override
+    public TableColumn<Employee, String> getEmployeeEmailAddressColumn() {
+        return employeeEmailAddressColumn;
+    }
+
+    @Override
+    public void onEditEmployee(Employee employee) {
+        CreateEmployeeController.startNewScene(this, employee);
     }
 
     @Override

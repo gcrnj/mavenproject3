@@ -260,7 +260,7 @@ public class CreateAppointmentFormController {
     @FXML
     public void openCreateCustomerForm() {
         System.out.println("openCreateCustomerForm");
-        CreateEmployeeController.startNewScene();
+        CreateEmployeeController.startNewScene(null, null);
     }
 
     @FXML

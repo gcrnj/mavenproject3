@@ -5,6 +5,8 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.jfoenix.validation.RequiredFieldValidator;
 
+import com.mycompany.mavenproject3.dashboard.EmployeesPage;
+import com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage;
 import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.utils.TextFormatterUtil;
 import javafx.fxml.FXML;
@@ -26,6 +28,9 @@ import java.util.regex.Pattern;
 public class CreateEmployeeController {
 
     Stage stage;
+
+    EmployeesPage employeesPage;
+    Employee employee;
 
     @FXML
     JFXTextField firstNameTextField, middleNameTextField, lastNameTextField, mobileNumberTextField, emailAddressTextField,
@@ -138,7 +143,7 @@ public class CreateEmployeeController {
         }
     }
 
-    public static void startNewScene() {
+    public static void startNewScene(EmployeesPage employeesPage, Employee employee) {
         // Load the new FXML for the new window
         try {
             FXMLLoader loader = new FXMLLoader(CreateEmployeeController.class.getResource("create_employee_form.fxml"));
@@ -155,10 +160,16 @@ public class CreateEmployeeController {
             System.out.println("Hey");
             stage.show();  // Show the new window
             controller.stage = stage;
+            controller.employeesPage = employeesPage;
+            controller.setEmployee(employee);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     @FXML

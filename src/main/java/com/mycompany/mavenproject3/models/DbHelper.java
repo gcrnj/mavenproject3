@@ -228,6 +228,7 @@ public class DbHelper {
         }
         return customers; // Return the list of appointments
     }
+
     public static String createEmployee(
             String firstName,
             String middleName,
@@ -791,7 +792,6 @@ public class DbHelper {
     }
 
 
-
     public static void updateAppointmentStatus(AppointmentStatus appointmentStatus, int appointmentId) {
         // SQL to update the status of an appointment
         String updateSql = "UPDATE " + Appointment.TABLE_NAME + " SET Status = ? WHERE AppointmentID = ?";
@@ -847,15 +847,13 @@ public class DbHelper {
         List<Position> positions = new ArrayList<>();
         String sql = "SELECT * FROM " + Position.TABLE_NAME;
         String managerWhere = " WHERE PositionName = 'Teller'";
-        if(LocalCache.isManager()) {
+        if (LocalCache.isManager()) {
             sql += managerWhere;
         }
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
-            if(LocalCache.isManager()) {
-                sql += managerWhere;
-            }
+
             while (resultSet.next()) {
                 positions.add(new Position(resultSet));
             }
@@ -866,6 +864,56 @@ public class DbHelper {
         }
 
         return positions;
+    }
+
+
+    // Method to retrieve all employees from the database
+    public static List<Employee> getEmployees() {
+        List<Employee> employees = new ArrayList<>();
+        String query = "SELECT e.*, p.* FROM " + Employee.TABLE_NAME + " e "
+                + "JOIN " + Position.TABLE_NAME + " p ON e.positionId = p.PositionID "; // Your query to fetch employees
+
+        String managerWhere = " WHERE PositionName = 'Teller'";
+        if (LocalCache.isManager()) {
+            query += managerWhere;
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            // Loop through the result set and create Employee objects
+            while (resultSet.next()) {
+                Employee employee = new Employee(resultSet);
+                employees.add(employee);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception (e.g., log the error)
+        }
+
+        return employees;
+    }
+
+    // Method to delete an employee by ID
+    public static void deleteEmployee(int employeeID) {
+        String query = "DELETE FROM Employee WHERE EmployeeID = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, employeeID); // Set the employee ID in the query
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Employee with ID " + employeeID + " has been deleted.");
+            } else {
+                System.out.println("No employee found with ID " + employeeID);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception (e.g., log the error)
+        }
     }
 
 }

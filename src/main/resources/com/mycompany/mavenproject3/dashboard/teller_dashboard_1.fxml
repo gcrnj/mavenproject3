@@ -142,11 +142,11 @@
                             <children>
                                 <TableView fx:id="employeesTableView" layoutY="60.0" prefHeight="430.0" prefWidth="970.0">
                                     <columns>
-                                        <TableColumn fx:id="employeesNameColumn" prefWidth="107.39999693632126" text="Employee #" />
-                              <TableColumn fx:id="employeesNameColumn1" prefWidth="295.00001525878906" text="Name" />
-                              <TableColumn fx:id="employeesNameColumn11" prefWidth="167.0" text="Position" />
-                              <TableColumn fx:id="employeesNameColumn111" prefWidth="171.5999755859375" text="Mobile Number" />
-                              <TableColumn fx:id="employeesNameColumn1111" prefWidth="232.20001220703125" text="Email Address" />
+                                        <TableColumn fx:id="employeeNumberColumn" prefWidth="107.39999693632126" text="Employee #" />
+                              <TableColumn fx:id="employeeNameColumn" prefWidth="295.00001525878906" text="Name" />
+                              <TableColumn fx:id="employeePositionColumn" prefWidth="167.0" text="Position" />
+                              <TableColumn fx:id="employeeMobileNumberColumn" prefWidth="171.5999755859375" text="Mobile Number" />
+                              <TableColumn fx:id="employeeEmailAddressColumn" prefWidth="232.20001220703125" text="Email Address" />
                                     </columns>
                                 </TableView>
                                 <Button fx:id="employeesCreateButton" layoutX="23.0" layoutY="22.0" mnemonicParsing="false" onAction="#createEmployeeForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
