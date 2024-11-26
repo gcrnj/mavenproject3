@@ -3,18 +3,20 @@ package com.mycompany.mavenproject3.myforms;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
+import com.jfoenix.validation.base.ValidatorBase;
+import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.Barangay;
 import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.Municipality;
 import com.mycompany.mavenproject3.models.Province;
+import com.mycompany.mavenproject3.utils.TextFormatterUtil;
+import com.mycompany.mavenproject3.validators.EmailValidator;
+import com.mycompany.mavenproject3.validators.MobileNumberValidator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -25,6 +27,7 @@ import java.util.*;
 import java.util.function.Function;
 
 public class CreateCustomerController {
+    Stage stage;
 
     @FXML
     JFXTextField firstNameTextField, lastNameTextField, mobileNumberTextField, emailAddressTextField,
@@ -43,6 +46,7 @@ public class CreateCustomerController {
     List<JFXTextField> textFields;
 
     Alert successAlert, cancelAlert, errorAlert;
+    private Refreshable refreshable;
 
     @FXML
     private void initialize() {
@@ -56,6 +60,18 @@ public class CreateCustomerController {
                 buildingTextField
         );
         populateProvinceComboBox();
+        addValidators();
+        addFormatters();
+
+        // Email validator
+        emailAddressTextField.getValidators().add(new EmailValidator());
+
+        // Mobile number validator
+        mobileNumberTextField.getValidators().add(new MobileNumberValidator());
+    }
+
+    private void addFormatters() {
+        mobileNumberTextField.setTextFormatter(TextFormatterUtil.intTextFormatter());
     }
 
     // General function to populate any ComboBox
@@ -126,10 +142,12 @@ public class CreateCustomerController {
         }
     }
 
-    public static void startNewScene() {
+    public static void startNewScene(Refreshable refreshable) {
         // Load the new FXML for the new window
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(CreateCustomerController.class.getResource("create_customer_form.fxml")));
+            FXMLLoader loader = new FXMLLoader(CreateCustomerController.class.getResource("create_customer_form.fxml"));
+            Parent root = loader.load();
+            CreateCustomerController controller = loader.getController();
             // Create a new Stage (window)
             Stage stage = new Stage();
             Scene scene = new Scene(root);
@@ -140,6 +158,8 @@ public class CreateCustomerController {
 
             System.out.println("Hey");
             stage.show();  // Show the new window
+            controller.stage = stage;
+            controller.refreshable = refreshable;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -163,7 +183,6 @@ public class CreateCustomerController {
 
 
         // Validators
-        addValidators();
 
         boolean isFormValid = true;
         // Validate all text fields
@@ -222,12 +241,11 @@ public class CreateCustomerController {
             successAlert.setHeaderText(null);
             successAlert.setContentText("All fields are valid and the data has been saved.");
 
-            // Optional: You can set an icon or other properties on the DialogPane if needed
-            DialogPane dialogPane = successAlert.getDialogPane();
-            dialogPane.setStyle("-fx-font-size: 14px;");
 
         }
         successAlert.showAndWait();
+        refreshable.refresh();
+        stage.close();
         // Todo handle ok by finishing screen
         // Todo refresh previous screen - add refreshable
     }
@@ -258,7 +276,9 @@ public class CreateCustomerController {
 
     @FXML
     private void cancelButtonClick() {
-        cancelAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        if (cancelAlert == null) {
+            cancelAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        }
         cancelAlert.setTitle("Cancel");
         cancelAlert.setHeaderText("Are you sure you want to cancel?");
         cancelAlert.setContentText("Any unsaved data will be lost.");
@@ -267,11 +287,10 @@ public class CreateCustomerController {
         Optional<ButtonType> result = cancelAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // Proceed with cancel operation (e.g., reset fields or close the form)
-            // Todo handle ok
+            stage.close();
             System.out.println("User confirmed cancellation");
         } else {
-            // User canceled the cancellation
-            // Todo handle cancel
+            cancelAlert.close();
             System.out.println("User canceled cancel operation");
         }
     }

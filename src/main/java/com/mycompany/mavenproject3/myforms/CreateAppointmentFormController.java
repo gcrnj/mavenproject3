@@ -16,6 +16,7 @@ import com.mycompany.mavenproject3.dashboard.CustomerItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceQuantityItemController;
 import com.mycompany.mavenproject3.dashboard.ServicesPage;
+import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.*;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -41,7 +42,7 @@ import javafx.util.converter.LocalDateStringConverter;
  *
  * @author GNew
  */
-public class CreateAppointmentFormController {
+public class CreateAppointmentFormController implements Refreshable {
 
     ServicesPage servicesPage;
     @FXML
@@ -282,7 +283,7 @@ public class CreateAppointmentFormController {
     @FXML
     public void openCreateCustomerForm() {
         System.out.println("openCreateCustomerForm");
-        CreateCustomerController.startNewScene();
+        CreateCustomerController.startNewScene(this);
     }
 
     @FXML
@@ -357,5 +358,10 @@ public class CreateAppointmentFormController {
     @FXML
     public void onCancelClicked() {
         stage.close();
+    }
+
+    @Override
+    public void refresh() {
+        reloadCustomersList(customerSearchTextField.getText());
     }
 }

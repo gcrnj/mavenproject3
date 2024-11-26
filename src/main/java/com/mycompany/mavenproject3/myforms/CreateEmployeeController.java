@@ -8,6 +8,8 @@ import com.jfoenix.validation.RequiredFieldValidator;
 import com.mycompany.mavenproject3.dashboard.EmployeesPage;
 import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.utils.TextFormatterUtil;
+import com.mycompany.mavenproject3.validators.EmailValidator;
+import com.mycompany.mavenproject3.validators.MobileNumberValidator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -410,40 +412,10 @@ public class CreateEmployeeController {
         passwordTextField.getValidators().add(min3LengthValidator);
 
         // Email validator
-        ValidatorBase emailValidator = new ValidatorBase() {
-            Pattern pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-
-            @Override
-            protected void eval() {
-                TextInputControl control = (TextInputControl) srcControl.get();
-                String text = control.getText();
-
-                Matcher matcher = pattern.matcher(text);
-
-                hasErrors.set(!matcher.matches());
-            }
-        };
-        emailValidator.setMessage("Invalid email format");
-        emailAddressTextField.getValidators().add(emailValidator);
+        emailAddressTextField.getValidators().add(new EmailValidator());
 
         // Mobile number validator
-        ValidatorBase mobileNumberValidator = new ValidatorBase() {
-            @Override
-            protected void eval() {
-                TextInputControl control = (TextInputControl) srcControl.get();
-                String text = control.getText();
-                boolean isError = false;
-                if (text == null || !text.startsWith("09")) {
-                    isError = true;
-                    setMessage("Required prefix: 09");
-                } else if (text.length() != 11) {
-                    isError = true;
-                    setMessage("Required length: 11");
-                }
-                hasErrors.set(isError);
-            }
-        };
-        mobileNumberTextField.getValidators().add(mobileNumberValidator);
+        mobileNumberTextField.getValidators().add(new MobileNumberValidator());
     }
 
     private void addFormatters() {
@@ -452,7 +424,9 @@ public class CreateEmployeeController {
 
     @FXML
     private void cancelButtonClick() {
-        cancelAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        if (cancelAlert == null) {
+            cancelAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        }
         cancelAlert.setTitle("Cancel");
         cancelAlert.setHeaderText("Are you sure you want to cancel?");
         cancelAlert.setContentText("Any unsaved data will be lost.");
