@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -17,6 +18,7 @@ public class StoreLoginController {
 
     
     private static Stage stage;
+    private final Alert loginFailedAlert = new Alert(Alert.AlertType.ERROR);
 
     @FXML
     private TextField usernameField; // Add @FXML annotation to match FXML
@@ -24,6 +26,16 @@ public class StoreLoginController {
     private TextField passwordField; // Add @FXML annotation to match FXML
     @FXML
     private ToggleGroup role; // Ensure this matches your FXML ToggleGroup
+
+    @FXML
+    private void initialize() {
+        initLoginAlert();
+    }
+
+    private void initLoginAlert() {
+        loginFailedAlert.setTitle("Login Failed");
+        loginFailedAlert.setHeaderText("Check credentials");
+    }
 
     // This method can be linked to a button's onAction in the store_login.fxml
     public static void startNewScene() throws IOException {
@@ -62,7 +74,8 @@ public class StoreLoginController {
             stage.close();
         } else {
             // Handle login failure (you could implement a dialog here)
-            System.out.println("Invalid username or password.");
+            loginFailedAlert.setContentText("Invalid username or password.");
+            loginFailedAlert.showAndWait();
         }
     }
 
