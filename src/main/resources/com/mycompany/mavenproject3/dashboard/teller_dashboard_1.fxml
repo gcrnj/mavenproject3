@@ -13,11 +13,23 @@
         <Pane prefHeight="63.0" prefWidth="969.0">
             <children>
                 <Text layoutX="79.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello," />
-                <Text fx:id="userNameText" layoutX="79.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
-                    <font>
-                        <Font size="28.0" />
-                    </font>
-                </Text>
+            <TextFlow layoutX="79.0" layoutY="20.78515625">
+               <children>
+                      <Text fx:id="userNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Gio">
+                          <font>
+                              <Font size="28.0" />
+                          </font>
+                      </Text>
+                  <VBox>
+                     <children>
+                        <Text fx:id="positionText" strokeType="OUTSIDE" strokeWidth="0.0" text="(Manager)" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </TextFlow>
                 <Button layoutX="887.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: red;" text="Logout &gt;" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />

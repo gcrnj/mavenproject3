@@ -94,7 +94,9 @@ public interface EmployeesPage extends Refreshable {
     }
 
     // Method to edit an employee (implement in your class)
-    void onEditEmployee(Employee employee);
+    default void onEditEmployee(Employee employee) {
+        CreateEmployeeController.startNewScene(this, employee);
+    }
 
     // Method to delete an employee (implement in your class)
     private void onDeleteEmployee(Employee employee) {

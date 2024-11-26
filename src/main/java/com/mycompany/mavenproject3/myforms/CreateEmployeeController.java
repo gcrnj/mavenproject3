@@ -6,7 +6,6 @@ import com.jfoenix.validation.base.ValidatorBase;
 import com.jfoenix.validation.RequiredFieldValidator;
 
 import com.mycompany.mavenproject3.dashboard.EmployeesPage;
-import com.mycompany.mavenproject3.dashboard.TellerDashboardControllerPage;
 import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.utils.TextFormatterUtil;
 import javafx.fxml.FXML;
@@ -32,6 +31,8 @@ public class CreateEmployeeController {
     EmployeesPage employeesPage;
     Employee employee;
 
+    boolean isFirstInit = true;
+
     @FXML
     JFXTextField firstNameTextField, middleNameTextField, lastNameTextField, mobileNumberTextField, emailAddressTextField,
             houseTextField, streetTextField, buildingTextField, usernameTextField, passwordTextField;
@@ -53,6 +54,9 @@ public class CreateEmployeeController {
     Alert successAlert, cancelAlert, errorAlert;
 
     @FXML
+    Text employeeFormTitle;
+
+    @FXML
     private void initialize() {
         requiredTextFields = Arrays.asList(
                 firstNameTextField,
@@ -61,13 +65,13 @@ public class CreateEmployeeController {
                 emailAddressTextField,
                 houseTextField,
                 streetTextField,
-                usernameTextField,
-                passwordTextField
+                usernameTextField
         );
         populateProvinceComboBox();
         populatePositionComboBox();
         addValidators();
         addFormatters();
+        employeeFormTitle.setText(employee == null ? "Create Employee Form" : "Edit Employee Details" );
     }
 
     // General function to populate any ComboBox
@@ -94,9 +98,27 @@ public class CreateEmployeeController {
     }
 
     private void populatePositionComboBox() {
+        // Get the list of positions
         List<Position> positions = DbHelper.getPositions();
+
+        // Populate the ComboBox with position names
         populateComboBox(positionComboBox, positions, Position::getPositionName);
+
+        // Check if employee exists
+        if (employee != null) {
+            // Find the Position from the list that matches the employee's Position ID
+            Position selectedPosition = positions.stream()
+                    .filter(p -> p.getPositionID() == employee.getPosition().getPositionID())
+                    .findFirst()
+                    .orElse(null);
+
+            // Select the Position in the ComboBox if found
+            if (selectedPosition != null) {
+                positionComboBox.getSelectionModel().select(selectedPosition);
+            }
+        }
     }
+
 
     private void populateProvinceComboBox() {
         // Get the list of provinces
@@ -118,12 +140,29 @@ public class CreateEmployeeController {
 
     @FXML
     private void selectProvince() {
-        Province selectedProvince = provinceComboBox.getSelectionModel().getSelectedItem();
+        Province selectedProvince;
+
+        if (isFirstInit && employee != null) {
+            // Edit Employee
+            selectedProvince = employee.getProvince();
+        } else {
+            // New Employee
+            selectedProvince = provinceComboBox.getSelectionModel().getSelectedItem();
+        }
+
         if (selectedProvince != null) {
             // You now have access to the full Province object
             System.out.println("Selected Province ID: " + selectedProvince.getProvinceID());
             System.out.println("Selected Province Name: " + selectedProvince.getProvinceName());
             populateMunicipalityComboBox(selectedProvince.getProvinceID());
+
+            if (isFirstInit && employee != null) {
+                Municipality municipality = municipalityComboBox.getItems().stream()
+                        .filter(m -> m.getMunicipalityID() == employee.getMunicipality().getMunicipalityID())
+                        .findFirst()
+                        .orElse(null);
+                municipalityComboBox.getSelectionModel().select(municipality);
+            }
         } else {
             municipalityComboBox.getItems().clear();
             barangayComboBox.getItems().clear();
@@ -132,12 +171,26 @@ public class CreateEmployeeController {
 
     @FXML
     private void selectMunicipality() {
-        Municipality selectedMunicipality = municipalityComboBox.getSelectionModel().getSelectedItem();
+        Municipality selectedMunicipality;
+        if (isFirstInit && employee != null) {
+            selectedMunicipality = employee.getMunicipality();
+        } else {
+            selectedMunicipality = municipalityComboBox.getSelectionModel().getSelectedItem();
+        }
         if (selectedMunicipality != null) {
             // You now have access to the full Province object
             System.out.println("Selected Municipality ID: " + selectedMunicipality.getMunicipalityID());
             System.out.println("Selected Municipality Name: " + selectedMunicipality.getMunicipalityName());
             populateBarangayComboBox(selectedMunicipality.getMunicipalityID());
+
+            if (isFirstInit && employee != null) {
+                Barangay barangay = barangayComboBox.getItems().stream()
+                        .filter(b -> b.getBrgyId() == employee.getBarangay().getBrgyId())
+                        .findFirst()
+                        .orElse(null);
+                barangayComboBox.getSelectionModel().select(barangay);
+                isFirstInit = false;
+            }
         } else {
             barangayComboBox.getItems().clear();
         }
@@ -153,7 +206,7 @@ public class CreateEmployeeController {
             Stage stage = new Stage();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("Create Employee Form");
+            stage.setTitle("Employee Form");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);  // Make stage2 modal
 
@@ -170,6 +223,42 @@ public class CreateEmployeeController {
 
     private void setEmployee(Employee employee) {
         this.employee = employee;
+        if (employee != null) {
+            firstNameTextField.setText(employee.getFirstName());
+            middleNameTextField.setText(employee.getMiddleName());
+            lastNameTextField.setText(employee.getLastName());
+            mobileNumberTextField.setText(employee.getContactNumber());
+            emailAddressTextField.setText(employee.getEmail());
+            houseTextField.setText(employee.getHouseNumber());
+            streetTextField.setText(employee.getStreet());
+            buildingTextField.setText(employee.getBuilding());
+            usernameTextField.setText(employee.getUsername());
+            passwordTextField.setVisible(false);
+
+            // Find the Position from the list that matches the employee's Position ID
+            try {
+                Province province = provinceComboBox.getItems().stream()
+                        .filter(p -> p.getProvinceID() == employee.getProvince().getProvinceID())
+                        .findFirst()
+                        .orElse(null);
+                provinceComboBox.getSelectionModel().select(province);
+            } catch (Exception e) {
+                isFirstInit = false;
+                e.printStackTrace();
+            }
+
+            // Position
+            try {
+                Position position = positionComboBox.getItems().stream()
+                        .filter(p -> p.getPositionID() == employee.getPosition().getPositionID())
+                        .findFirst()
+                        .orElse(null);
+                positionComboBox.getSelectionModel().select(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @FXML
@@ -234,14 +323,28 @@ public class CreateEmployeeController {
 
         // Add to database if valid
         if (isFormValid) {
+            String createEmployeeError;
+            if (employee != null) {
+                // Edit
+                createEmployeeError = DbHelper.updateEmployeeData(
+                        employee.getEmployeeID(),
+                        employeeFirstName, employeeMiddleName, employeeLastName,
+                        employeeMobileNumber, employeeEmailAddress,
+                        barangay, employeeHouse, employeeStreet, employeeBuilding,
+                        position.getPositionID(),
+                        username
+                );
+            } else {
+                // Create
+                createEmployeeError = DbHelper.createEmployee(
+                        employeeFirstName, employeeMiddleName, employeeLastName,
+                        employeeMobileNumber, employeeEmailAddress,
+                        barangay, employeeHouse, employeeStreet, employeeBuilding,
+                        position.getPositionID(),
+                        username, password
+                );
+            }
 
-            String createEmployeeError = DbHelper.createEmployee(
-                    employeeFirstName, employeeMiddleName, employeeLastName,
-                    employeeMobileNumber, employeeEmailAddress,
-                    barangay, employeeHouse, employeeStreet, employeeBuilding,
-                    position.getPositionID(),
-                    username, password
-            );
             if (createEmployeeError == null) {
                 // Success
                 showSuccessDialog();
@@ -264,6 +367,7 @@ public class CreateEmployeeController {
             // Optional: You can set an icon or other properties on the DialogPane if needed
             DialogPane dialogPane = successAlert.getDialogPane();
             dialogPane.setStyle("-fx-font-size: 14px;");
+            employeesPage.refresh();
 
         }
         successAlert.showAndWait();
@@ -308,6 +412,7 @@ public class CreateEmployeeController {
         // Email validator
         ValidatorBase emailValidator = new ValidatorBase() {
             Pattern pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
             @Override
             protected void eval() {
                 TextInputControl control = (TextInputControl) srcControl.get();

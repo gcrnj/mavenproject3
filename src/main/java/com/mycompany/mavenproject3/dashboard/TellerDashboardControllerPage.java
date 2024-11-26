@@ -72,7 +72,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @FXML
     ImageView profileImageView;
     @FXML
-    Text userNameText;
+    Text userNameText, positionText;
 
     @FXML
     public Text appointmentsCountText, servicesCountText;
@@ -154,7 +154,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
 
     private void initUpperDetails() {
         userNameText.setText(LocalCache.getEmployee().getFirstName());
-
+        positionText.setText("(" + LocalCache.getEmployee().getPosition().getPositionName() + ")");
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
 //        date.setText(dateFormat.format(new Date()));
         Image image = new Image(getClass().getResource("/images/abc.png").toExternalForm());
@@ -230,11 +230,6 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @Override
     public TableColumn<Employee, String> getEmployeeEmailAddressColumn() {
         return employeeEmailAddressColumn;
-    }
-
-    @Override
-    public void onEditEmployee(Employee employee) {
-        CreateEmployeeController.startNewScene(this, employee);
     }
 
     @Override

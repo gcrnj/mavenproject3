@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateEmployeeController">
    <children>
-      <Text layoutX="32.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create Employee Form">
+      <Text fx:id="employeeFormTitle" layoutX="32.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create Employee Form">
          <font>
             <Font name="System Bold" size="21.0" />
          </font></Text>
@@ -66,7 +66,7 @@
       <JFXTextField fx:id="houseTextField" layoutX="14.0" layoutY="364.0" prefHeight="27.0" prefWidth="74.0" promptText="House #" />
       <JFXTextField fx:id="streetTextField" layoutX="101.0" layoutY="364.0" prefHeight="27.0" prefWidth="292.0" promptText="Street" />
       <JFXTextField fx:id="buildingTextField" layoutX="406.0" layoutY="364.0" prefHeight="27.0" prefWidth="270.0" promptText="Building" />
-      <JFXComboBox fx:id="positionComboBox" layoutX="418.0" layoutY="6.0" onAction="#selectMunicipality" prefHeight="28.0" prefWidth="269.0" promptText="Position" />
+      <JFXComboBox fx:id="positionComboBox" layoutX="418.0" layoutY="6.0" prefHeight="28.0" prefWidth="269.0" promptText="Position" />
       <Text fx:id="positionErrorText" fill="RED" layoutX="499.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position is required" visible="false" />
       <JFXTextField fx:id="usernameTextField" layoutX="76.0" layoutY="423.0" prefHeight="27.0" prefWidth="115.0" promptText="Username" />
       <JFXTextField fx:id="passwordTextField" layoutX="212.0" layoutY="423.0" prefHeight="27.0" prefWidth="164.0" promptText="Password" />

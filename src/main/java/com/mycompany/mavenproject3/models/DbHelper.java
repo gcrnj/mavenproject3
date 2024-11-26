@@ -97,7 +97,7 @@ public class DbHelper {
     ) {
         List<Appointment> appointments = new ArrayList<>();
         String sql = "SELECT sa.*, "
-                + "e.EmployeeID AS EmployeeID, e.FirstName AS EmployeeFirstName, e.LastName AS EmployeeLastName, e.ContactNumber AS EmployeeContactNumber, e.Email AS EmployeeEmail, "
+                + "e.EmployeeID AS EmployeeID, e.FirstName AS EmployeeFirstName, e.MiddleName, e.LastName AS EmployeeLastName, e.Username, e.ContactNumber AS EmployeeContactNumber, e.Email AS EmployeeEmail, "
                 + "c.BarangayID, c.HouseNumber, c.Street, c.Building, "
                 + "c.CustomerID AS CustomerID, c.FirstName AS CustomerFirstName, c.LastName AS CustomerLastName, c.ContactNumber AS CustomerContactNumber, c.Email AS CustomerEmail, "
                 + "p.*, s.*, asv.Quantity AS ServiceQuantity "
@@ -301,6 +301,102 @@ public class DbHelper {
         return error;
     }
 
+    public static String updateEmployeeData(
+            int employeeId,
+            String firstName,
+            String middleName,
+            String lastName,
+            String contactNumber,
+            String emailAddress,
+            Barangay barangay,
+            String houseNumber,
+            String street,
+            String building,
+            int positionId,
+            String username
+    ) {
+        String error = null;
+
+        // SQL to check if the username is already used by another employee
+        String checkUsernameSql = "SELECT COUNT(*) FROM " + Employee.TABLE_NAME +
+                " WHERE Username = ? AND EmployeeID != ?";
+
+        // SQL to update employee data
+        String updateEmployeeSql = "UPDATE " + Employee.TABLE_NAME + " SET " +
+                "FirstName = ?, MiddleName = ?, LastName = ?, " +
+                "ContactNumber = ?, Email = ?, " +
+                "BrgyID = ?, HouseNumber = ?, Street = ?, Building = ?, " +
+                "PositionID = ?, " +
+                "Username = ? " +
+                "WHERE EmployeeID = ?";
+
+        try {
+            // Check if the username is already in use
+            try (PreparedStatement checkUsernameStmt = connection.prepareStatement(checkUsernameSql)) {
+                checkUsernameStmt.setString(1, username);
+                checkUsernameStmt.setInt(2, employeeId);
+
+                try (ResultSet resultSet = checkUsernameStmt.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        return "Username already exists.";
+                    }
+                }
+            }
+
+            // Proceed with updating the employee data
+            try (PreparedStatement updateEmployeeStmt = connection.prepareStatement(updateEmployeeSql)) {
+                updateEmployeeStmt.setString(1, firstName);
+                updateEmployeeStmt.setString(2, middleName);
+                updateEmployeeStmt.setString(3, lastName);
+
+                updateEmployeeStmt.setString(4, contactNumber);
+                updateEmployeeStmt.setString(5, emailAddress);
+
+                updateEmployeeStmt.setInt(6, barangay.getBrgyId());
+                updateEmployeeStmt.setString(7, houseNumber);
+                updateEmployeeStmt.setString(8, street);
+                updateEmployeeStmt.setString(9, building);
+
+                updateEmployeeStmt.setInt(10, positionId);
+                updateEmployeeStmt.setString(11, username);
+                updateEmployeeStmt.setInt(12, employeeId);
+
+                int rowsAffected = updateEmployeeStmt.executeUpdate();
+                if (rowsAffected == 0) {
+                    error = "No employee found with the given ID.";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // For debugging
+            error = e.getMessage();
+        }
+
+        return error;
+    }
+
+
+    public static String updateEmployeePassword(int employeeId, String plainPassword) {
+        String error = null;
+
+        // SQL to update employee password
+        String updatePasswordSql = "UPDATE " + Employee.TABLE_NAME + " SET Password = ? WHERE EmployeeID = ?";
+
+        try (PreparedStatement updatePasswordStmt = connection.prepareStatement(updatePasswordSql)) {
+            String hashedPassword = PasswordUtils.hashPassword(plainPassword);
+            updatePasswordStmt.setString(1, hashedPassword);
+            updatePasswordStmt.setInt(2, employeeId);
+
+            int rowsAffected = updatePasswordStmt.executeUpdate();
+            if (rowsAffected == 0) {
+                error = "No employee found with the given ID.";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // For debugging
+            error = e.getMessage();
+        }
+
+        return error;
+    }
 
     public static List<Service> getServices() {
         List<Service> services = new ArrayList<>();
@@ -633,6 +729,70 @@ public class DbHelper {
         return barangays; // Return the list of barangays
     }
 
+    public static Province getProvinceById(int provinceId) {
+        Province province = null;
+        String sql = "SELECT * FROM " + Province.TABLE_NAME + " WHERE ProvinceID = ?"; // SQL query to get province by ID
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, provinceId); // Set the provinceId parameter
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    province = new Province(resultSet); // Assuming Province constructor takes ResultSet
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // For debugging
+        }
+
+        return province; // Return the Province object or null
+    }
+
+    public static Municipality getMunicipalityById(int municipalityId) {
+        Municipality municipality = null;
+        String sql = "SELECT m.*, p.* FROM " + Municipality.TABLE_NAME + " m " +
+                "JOIN " + Province.TABLE_NAME + " p ON m.ProvinceID = p.ProvinceID " +
+                "WHERE m.MunicipalityID = ?"; // SQL query to get municipality by ID
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, municipalityId); // Set the municipalityId parameter
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    municipality = new Municipality(resultSet); // Assuming Municipality constructor takes ResultSet
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // For debugging
+        }
+
+        return municipality; // Return the Municipality object or null
+    }
+
+    public static Barangay getBarangayById(int barangayId) {
+        Barangay barangay = null;
+        String sql = "SELECT b.*, m.MunicipalityName, p.ProvinceName, p.ProvinceID " +
+                "FROM Barangays b " +
+                "JOIN Municipalities m ON b.MunicipalityID = m.MunicipalityID " +
+                "JOIN Provinces p ON m.ProvinceID = p.ProvinceID " +
+                "WHERE b.BrgyID = ?"; // SQL query to get barangay by ID
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, barangayId); // Set the barangayId parameter
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    barangay = new Barangay(resultSet); // Assuming Barangay constructor takes ResultSet
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // For debugging
+        }
+
+        return barangay; // Return the Barangay object or null
+    }
+
+
     public static String createVehicle(String vehicleName) {
         int createdBy = LocalCache.getEmployee().getEmployeeID();
         String sqlInsert = "INSERT INTO " + Vehicle.TABLE_NAME +
@@ -884,6 +1044,9 @@ public class DbHelper {
             // Loop through the result set and create Employee objects
             while (resultSet.next()) {
                 Employee employee = new Employee(resultSet);
+                if(hasColumn(resultSet, Employee.COL_BRGY_ID)) {
+                    employee.setBarangay(getBarangayById(resultSet.getInt(Employee.COL_BRGY_ID)));
+                }
                 employees.add(employee);
             }
 
@@ -915,5 +1078,18 @@ public class DbHelper {
             // Handle exception (e.g., log the error)
         }
     }
-
+    private static boolean hasColumn(ResultSet resultSet, String columnName) {
+        try {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                if (metaData.getColumnLabel(i).equalsIgnoreCase(columnName)) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exception (log it in production)
+        }
+        return false; // Column not found
+    }
 }
