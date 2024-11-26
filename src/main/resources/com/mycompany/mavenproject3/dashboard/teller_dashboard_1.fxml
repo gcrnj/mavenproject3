@@ -70,12 +70,13 @@
                                 </Button>
                                 <TableView fx:id="appointmentsTableView" layoutY="62.0" prefHeight="400.0" prefWidth="969.0">
                                     <columns>
-                                        <TableColumn fx:id="appointmentDateColumn" prefWidth="150.3999878168106" text="Date" />
-                                        <TableColumn fx:id="appointmentTimeColumn" minWidth="0.0" prefWidth="104.0" text="Time" />
-                                        <TableColumn fx:id="appointmentCustomerColumn" prefWidth="239.00001525878906" text="Customer Name" />
-                                        <TableColumn fx:id="appointmentServicesColumn" prefWidth="242.5999755859375" text="Services" />
-                                        <TableColumn fx:id="appointmentCreatedColumn" prefWidth="124.4000244140625" text="Created by" />
-                                        <TableColumn fx:id="appointmentEmployeePositionColumn" prefWidth="111.800048828125" text="Position" />
+                                        <TableColumn fx:id="appointmentDateColumn" prefWidth="100" text="Date" />
+                                        <TableColumn fx:id="appointmentStatusColumn" prefWidth="100" text="Status" />
+                                        <TableColumn fx:id="appointmentTimeColumn" minWidth="0.0" prefWidth="100" text="Time" />
+                                        <TableColumn fx:id="appointmentCustomerColumn" prefWidth="157" text="Customer Name" />
+                                        <TableColumn fx:id="appointmentServicesColumn" prefWidth="152.0" text="Services" />
+                                        <TableColumn fx:id="appointmentCreatedColumn" prefWidth="200" text="Created by" />
+                                        <TableColumn fx:id="appointmentEmployeePositionColumn" prefWidth="157.0" text="Position" />
                                     </columns>
                                 </TableView>
                                 <HBox fx:id="appointmentStatusHBox" alignment="CENTER_LEFT" layoutX="83.0" layoutY="30.0" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="553.0">

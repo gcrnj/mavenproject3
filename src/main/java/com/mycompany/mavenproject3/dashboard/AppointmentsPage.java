@@ -21,6 +21,8 @@ public interface AppointmentsPage extends Refreshable {
 
     TableColumn<Appointment, String> getAppointmentDateColumn();
 
+    TableColumn<Appointment, String> getAppointmentStatusColumn();
+
     TableColumn<Appointment, String> getAppointmentTimeColumn();
 
     TableColumn<Appointment, String> getAppointmentCustomerColumn();
@@ -57,6 +59,7 @@ public interface AppointmentsPage extends Refreshable {
         ObservableList<Appointment> observableAppointments = Util.getObservableList(appointments);
         //
         getAppointmentDateColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDateString()));
+        getAppointmentStatusColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().getCamelCaseName()));
         getAppointmentTimeColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTime()));
         getAppointmentCustomerColumn().setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getFullName()));
         getAppointmentServicesColumn().setCellValueFactory(cellData -> {

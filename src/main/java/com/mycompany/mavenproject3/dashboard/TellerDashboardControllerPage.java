@@ -43,7 +43,7 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @FXML
     public TableView<Appointment> appointmentsTableView;
     @FXML
-    public TableColumn<Appointment, String> appointmentDateColumn, appointmentTimeColumn, appointmentCustomerColumn, appointmentServicesColumn, appointmentCreatedColumn, appointmentEmployeePositionColumn;
+    public TableColumn<Appointment, String> appointmentDateColumn, appointmentStatusColumn, appointmentTimeColumn, appointmentCustomerColumn, appointmentServicesColumn, appointmentCreatedColumn, appointmentEmployeePositionColumn;
 
     @FXML
     DatePicker appointmentFromDatePicker, appointmentToDatePicker;
@@ -307,6 +307,11 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
     @Override
     public TableColumn<Appointment, String> getAppointmentDateColumn() {
         return appointmentDateColumn;
+    }
+
+    @Override
+    public TableColumn<Appointment, String> getAppointmentStatusColumn() {
+        return appointmentStatusColumn;
     }
 
     @Override
