@@ -228,9 +228,9 @@ public class DbHelper {
         }
         return customers; // Return the list of appointments
     }
-
-    public static String createCustomer(
+    public static String createEmployee(
             String firstName,
+            String middleName,
             String lastName,
 
             String contactNumber,
@@ -239,34 +239,67 @@ public class DbHelper {
             Barangay barangay,
             String houseNumber,
             String street,
-            String building
-    ) {
+            String building,
 
+            int positionId,
+
+            String username,
+            String plainPassword
+    ) {
         String error = null;
 
-        String sql = "INSERT INTO " + Customer.TABLE_NAME + " values (?,?,  ?,?,  ?,?,?,?)";
+        // SQL to check if the username already exists
+        String checkUsernameSql = "SELECT COUNT(*) FROM " + Employee.TABLE_NAME + " WHERE Username = ?";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
+        // SQL to insert the new employee
+        String insertEmployeeSql = "INSERT INTO " + Employee.TABLE_NAME + " " +
+                "(FirstName, MiddleName, LastName, " +
+                "ContactNumber, Email, " +
+                "BrgyID, HouseNumber, Street, Building, " +
+                "PositionID, " +
+                "Username, Password) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            preparedStatement.setString(3, contactNumber);
-            preparedStatement.setString(4, emailAddress);
+        try {
+            // Check if the username already exists
+            try (PreparedStatement checkUsernameStmt = connection.prepareStatement(checkUsernameSql)) {
+                checkUsernameStmt.setString(1, username);
+                ResultSet resultSet = checkUsernameStmt.executeQuery();
 
-            preparedStatement.setInt(5, barangay.getBrgyId());
-            preparedStatement.setString(6, houseNumber);
-            preparedStatement.setString(7, street);
-            preparedStatement.setString(8, building);
+                if (resultSet.next() && resultSet.getInt(1) > 0) {
+                    return "Username already exists. Please choose a different username.";
+                }
+            }
 
-            preparedStatement.executeUpdate();
+            // Insert the employee if the username is unique
+            try (PreparedStatement insertEmployeeStmt = connection.prepareStatement(insertEmployeeSql)) {
+                insertEmployeeStmt.setString(1, firstName);
+                insertEmployeeStmt.setString(2, middleName);
+                insertEmployeeStmt.setString(3, lastName);
 
+                insertEmployeeStmt.setString(4, contactNumber);
+                insertEmployeeStmt.setString(5, emailAddress);
+
+                insertEmployeeStmt.setInt(6, barangay.getBrgyId());
+                insertEmployeeStmt.setString(7, houseNumber);
+                insertEmployeeStmt.setString(8, street);
+                insertEmployeeStmt.setString(9, building);
+
+                insertEmployeeStmt.setInt(10, positionId);
+
+                insertEmployeeStmt.setString(11, username);
+                insertEmployeeStmt.setString(12, PasswordUtils.hashPassword(plainPassword));
+
+                insertEmployeeStmt.executeUpdate();
+            }
         } catch (SQLException e) {
-            // Handle exceptions
             e.printStackTrace(); // For debugging
             error = e.getMessage();
         }
-        return error; // Return the list of appointments
+
+        return error;
     }
+
 
     public static List<Service> getServices() {
         List<Service> services = new ArrayList<>();
@@ -810,5 +843,29 @@ public class DbHelper {
         return error; // Return null if successful, or the error message if not
     }
 
+    public static List<Position> getPositions() {
+        List<Position> positions = new ArrayList<>();
+        String sql = "SELECT * FROM " + Position.TABLE_NAME;
+        String managerWhere = " WHERE PositionName = 'Teller'";
+        if(LocalCache.isManager()) {
+            sql += managerWhere;
+        }
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            if(LocalCache.isManager()) {
+                sql += managerWhere;
+            }
+            while (resultSet.next()) {
+                positions.add(new Position(resultSet));
+            }
+
+        } catch (SQLException e) {
+            // Handle SQL exceptions (e.g., log error)
+            e.printStackTrace();
+        }
+
+        return positions;
+    }
 
 }

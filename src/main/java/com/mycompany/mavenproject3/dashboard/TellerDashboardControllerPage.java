@@ -26,12 +26,18 @@ import javafx.stage.Stage;
  *
  * @author GNew
  */
-public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, VehiclesPage, Refreshable {
+public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, VehiclesPage, EmployeesPage, Refreshable {
 
 //    @FXML
 //    public Text userName, userPosition, date;
 
     private Stage stage;
+
+    @FXML
+    TabPane dashboardTabPane;
+
+    @FXML
+    Tab employeesTab;
 
     @FXML
     public TableView<Appointment> appointmentsTableView;
@@ -127,6 +133,16 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
         loadAppointments();
         loadServices();
         loadVehicles();
+        loadEmployeesTab();
+    }
+
+    private void loadEmployeesTab() {
+        if(LocalCache.isTeller()) {
+            dashboardTabPane.getTabs().remove(employeesTab);
+            return;
+        }
+        // For managers and owners only
+
     }
 
     private void initUpperDetails() {
@@ -286,4 +302,14 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
         return appointmentsCountText;
     }
     // End for overrides in Appointments
+
+    // Start for overrides in Employees
+
+    @Override
+    public void createEmployeeForm() {
+        EmployeesPage.super.createEmployeeForm();
+    }
+
+
+    // End for overrides in Employees
 }

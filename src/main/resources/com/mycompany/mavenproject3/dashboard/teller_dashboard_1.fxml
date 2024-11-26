@@ -37,7 +37,7 @@
                 </ImageView>
             </children>
         </Pane>
-        <TabPane layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="969.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="dashboardTabPane" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="969.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab closable="false" text="Appointments">
                     <content>
@@ -69,8 +69,14 @@
                                 <HBox fx:id="appointmentStatusHBox" alignment="CENTER_LEFT" layoutX="83.0" layoutY="30.0" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="553.0">
                            <children>
                               <CheckBox fx:id="scheduledCheckBox" mnemonicParsing="false" text="Scheduled" />
-                              <CheckBox fx:id="completedCheckBox" mnemonicParsing="false" text="Completed" />
-                              <CheckBox fx:id="canceledCheckBox" mnemonicParsing="false" text="Canceled" />
+                              <CheckBox fx:id="completedCheckBox" mnemonicParsing="false" text="Completed">
+                                 <HBox.margin>
+                                    <Insets left="15.0" />
+                                 </HBox.margin></CheckBox>
+                              <CheckBox fx:id="canceledCheckBox" mnemonicParsing="false" text="Canceled">
+                                 <HBox.margin>
+                                    <Insets left="15.0" />
+                                 </HBox.margin></CheckBox>
                            </children></HBox>
                             </children>
                             <padding>
@@ -109,28 +115,52 @@
                         </Pane>
                     </content>
                 </Tab>
-                <Tab text="Products" />
-            <Tab text="Vehicles">
-               <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="970.0">
-                     <children>
-                        <TableView fx:id="vehiclesTableView" layoutY="60.0" prefHeight="430.0" prefWidth="970.0">
-                           <columns>
-                              <TableColumn fx:id="vehicleNameColumn" prefWidth="966.9999939203262" text="Vehicles" />
-                           </columns>
-                        </TableView>
-                        <Button fx:id="vehicleCreateButton" layoutX="23.0" layoutY="22.0" mnemonicParsing="false" onAction="#openVehicleForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </Tab>
+                <Tab fx:id="vehcilesTab" text="Vehicles">
+                    <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="970.0">
+                            <children>
+                                <TableView fx:id="vehiclesTableView" layoutY="60.0" prefHeight="430.0" prefWidth="970.0">
+                                    <columns>
+                                        <TableColumn fx:id="vehicleNameColumn" prefWidth="966.9999939203262" text="Vehicles" />
+                                    </columns>
+                                </TableView>
+                                <Button fx:id="vehicleCreateButton" layoutX="23.0" layoutY="22.0" mnemonicParsing="false" onAction="#openVehicleForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="employeesTab" text="Employees">
+                    <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="970.0">
+                            <children>
+                                <TableView fx:id="employeesTableView" layoutY="60.0" prefHeight="430.0" prefWidth="970.0">
+                                    <columns>
+                                        <TableColumn fx:id="employeesNameColumn" prefWidth="107.39999693632126" text="Employee #" />
+                              <TableColumn fx:id="employeesNameColumn1" prefWidth="295.00001525878906" text="Name" />
+                              <TableColumn fx:id="employeesNameColumn11" prefWidth="167.0" text="Position" />
+                              <TableColumn fx:id="employeesNameColumn111" prefWidth="171.5999755859375" text="Mobile Number" />
+                              <TableColumn fx:id="employeesNameColumn1111" prefWidth="232.20001220703125" text="Email Address" />
+                                    </columns>
+                                </TableView>
+                                <Button fx:id="employeesCreateButton" layoutX="23.0" layoutY="22.0" mnemonicParsing="false" onAction="#createEmployeeForm" style="-fx-background-color: green;" text="Create " textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
             </tabs>
         </TabPane>
     </children>

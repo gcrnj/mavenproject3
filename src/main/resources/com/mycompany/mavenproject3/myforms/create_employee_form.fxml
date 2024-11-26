@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject3.myforms.CreateEmployeeController">
+   <children>
+      <Text layoutX="32.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create Employee Form">
+         <font>
+            <Font name="System Bold" size="21.0" />
+         </font></Text>
+      <Text layoutX="14.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Employee Name">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Text>
+      <Text layoutX="14.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name" />
+      <Text layoutX="15.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Middle Name" />
+      <Text layoutX="15.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name" />
+      <Text layoutX="379.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contact Details">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="379.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mobile Number" />
+      <Text layoutX="380.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email Address" />
+      <Text layoutX="14.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <Text fx:id="cityBarangayErrorText" fill="RED" layoutX="88.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <JFXButton layoutX="618.0" layoutY="437.0" onAction="#saveButtonClick" style="-fx-background-color: green;" text="Save" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </JFXButton>
+      <JFXButton layoutX="550.0" layoutY="437.0" onAction="#cancelButtonClick" style="-fx-background-color: maroon;" text="Cancel" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </JFXButton>
+      <JFXTextField fx:id="firstNameTextField" layoutX="117.0" layoutY="110.0" prefHeight="26.0" prefWidth="198.0" />
+      <JFXTextField fx:id="middleNameTextField" layoutX="117.0" layoutY="160.0" prefHeight="26.0" prefWidth="198.0" />
+      <JFXTextField fx:id="lastNameTextField" layoutX="117.0" layoutY="211.0" prefHeight="26.0" prefWidth="198.0" />
+      <JFXTextField fx:id="mobileNumberTextField" layoutX="494.0" layoutY="114.0" prefHeight="26.0" prefWidth="164.0" />
+      <JFXTextField fx:id="emailAddressTextField" layoutX="494.0" layoutY="164.0" prefHeight="26.0" prefWidth="164.0" />
+      <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="303.0" prefHeight="59.0" prefWidth="198.0">
+         <children>
+            <JFXComboBox fx:id="provinceComboBox" onAction="#selectProvince" prefHeight="28.0" prefWidth="269.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Province" />
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" layoutX="234.0" layoutY="303.0" prefHeight="59.0" prefWidth="223.0">
+         <children>
+            <JFXComboBox fx:id="municipalityComboBox" onAction="#selectMunicipality" prefHeight="28.0" prefWidth="269.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="City / Municipality" />
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" layoutX="469.0" layoutY="303.0" prefHeight="59.0" prefWidth="210.0">
+         <children>
+            <JFXComboBox fx:id="barangayComboBox" prefHeight="28.0" prefWidth="269.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Barangay" />
+         </children>
+      </VBox>
+      <JFXTextField fx:id="houseTextField" layoutX="14.0" layoutY="364.0" prefHeight="27.0" prefWidth="74.0" promptText="House #" />
+      <JFXTextField fx:id="streetTextField" layoutX="101.0" layoutY="364.0" prefHeight="27.0" prefWidth="292.0" promptText="Street" />
+      <JFXTextField fx:id="buildingTextField" layoutX="406.0" layoutY="364.0" prefHeight="27.0" prefWidth="270.0" promptText="Building" />
+      <JFXComboBox fx:id="positionComboBox" layoutX="418.0" layoutY="6.0" onAction="#selectMunicipality" prefHeight="28.0" prefWidth="269.0" promptText="Position" />
+      <Text fx:id="positionErrorText" fill="RED" layoutX="499.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position is required" visible="false" />
+      <JFXTextField fx:id="usernameTextField" layoutX="76.0" layoutY="423.0" prefHeight="27.0" prefWidth="115.0" promptText="Username" />
+      <JFXTextField fx:id="passwordTextField" layoutX="212.0" layoutY="423.0" prefHeight="27.0" prefWidth="164.0" promptText="Password" />
+      <Text layoutX="14.0" layoutY="442.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

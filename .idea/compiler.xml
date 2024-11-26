@@ -10,4 +10,9 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="mavenproject3" options="--add-exports com.jfoenix/com.jfoenix.validation.base=com.mycompany.mavenproject3" />
+    </option>
+  </component>
 </project>
