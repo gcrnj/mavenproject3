@@ -25,9 +25,6 @@ public class ServiceItemController {
     @FXML
     HBox backgroundHBox;
 
-    @FXML
-    Button optionsButton;
-
 
     public ServiceItemController() {
     }
@@ -62,10 +59,6 @@ public class ServiceItemController {
     @FXML
     private void basta() {
         System.out.println("HEllo");
-    }
-
-    public void removeButton() {
-        backgroundHBox.getChildren().remove(optionsButton);
     }
 
 }

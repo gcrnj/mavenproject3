@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import com.jfoenix.controls.JFXTextField;
 import com.mycompany.mavenproject3.dashboard.CustomerItemController;
 import com.mycompany.mavenproject3.dashboard.ServiceItemController;
+import com.mycompany.mavenproject3.dashboard.ServiceQuantityItemController;
 import com.mycompany.mavenproject3.dashboard.ServicesPage;
 import com.mycompany.mavenproject3.models.*;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,6 +29,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -93,12 +95,10 @@ public class CreateAppointmentFormController {
                 Parent root = loader.load(); // Load and retrieve the root node
                 ServiceItemController controller = loader.getController();
                 controller.setService(service);
-                controller.removeButton();
                 root.prefWidth(330); // Set your desired fixed width, e.g., 300px
                 servicesVBox.getChildren().add(root);
 
                 root.setOnMouseClicked(mouseEvent -> {
-
                     selectedServices.add(service);
                     reloadServicesList();
                 });
@@ -213,15 +213,37 @@ public class CreateAppointmentFormController {
 
                 if (change.wasAdded()) {
                     for (Service addedService : change.getAddedSubList()) {
-                        Text currentSelectedText = new Text(addedService.getServiceName());
-                        selectedServicesVBox.getChildren().add(currentSelectedText);
+                        // Load the FXML for the custom service item
+                        try {
 
-                        currentSelectedText.setOnMouseClicked(event -> {
-                            // Remove from the list
-                            selectedServices.remove(addedService);
-                            selectedServicesVBox.getChildren().remove(currentSelectedText);
-                            reloadServicesList();
-                        });
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/mavenproject3/dashboard/service_quantity_item.fxml"));
+                            Parent serviceItem = loader.load();
+
+                            // Get the controller to interact with the FXML
+                            ServiceQuantityItemController controller = loader.getController();
+
+                            // Define the quantity change listener
+                            ChangeListener<Integer> quantityChangeListener = (observable, oldValue, newValue) -> {
+                                // Update the service's quantity based on user input
+                                addedService.setQuantity(newValue);
+                                System.out.println("Quantity changed from " + oldValue + " to " + newValue);
+                            };
+
+                            // Set the service to the controller
+                            controller.setService(addedService, quantityChangeListener);
+
+                            selectedServicesVBox.getChildren().add(serviceItem);
+
+                            // Optional: Add a listener or event handler to the item
+                            serviceItem.setOnMouseClicked(event -> {
+                                // Remove from the list
+                                selectedServices.remove(addedService);
+                                selectedServicesVBox.getChildren().remove(serviceItem);
+                                reloadServicesList();
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
