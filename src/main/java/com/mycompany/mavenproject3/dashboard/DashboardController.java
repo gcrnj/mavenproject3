@@ -4,7 +4,6 @@ import com.mycompany.mavenproject3.StoreLoginController;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.myforms.CreateAppointmentFormController;
-import com.mycompany.mavenproject3.myforms.CreateEmployeeController;
 import com.mycompany.mavenproject3.myforms.CreateServiceFormController;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ import javafx.stage.Stage;
  *
  * @author GNew
  */
-public class TellerDashboardControllerPage implements ServicesPage, AppointmentsPage, VehiclesPage, EmployeesPage, Refreshable {
+public class DashboardController implements ServicesPage, AppointmentsPage, VehiclesPage, EmployeesPage, Refreshable {
 
 //    @FXML
 //    public Text userName, userPosition, date;
@@ -110,10 +109,10 @@ public class TellerDashboardControllerPage implements ServicesPage, Appointments
 
     public static void startNewScene() throws IOException {
         // Load the new FXML for the new window
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(TellerDashboardControllerPage.class.getResource("teller_dashboard_1.fxml")));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(DashboardController.class.getResource("teller_dashboard_1.fxml")));
         Parent root = loader.load();
         // Create a new Stage (window)
-        TellerDashboardControllerPage controller = loader.getController();
+        DashboardController controller = loader.getController();
         Stage stage = new Stage();
         Scene scene = new Scene(root);
         stage.setScene(scene);

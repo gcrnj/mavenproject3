@@ -2,14 +2,11 @@ package com.mycompany.mavenproject3.myforms;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.validation.base.ValidatorBase;
 import com.jfoenix.validation.RequiredFieldValidator;
 
 import com.mycompany.mavenproject3.dashboard.EmployeesPage;
 import com.mycompany.mavenproject3.models.*;
 import com.mycompany.mavenproject3.utils.TextFormatterUtil;
-import com.mycompany.mavenproject3.validators.EmailValidator;
-import com.mycompany.mavenproject3.validators.MobileNumberValidator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,8 +20,6 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CreateEmployeeController {
 
@@ -399,23 +394,6 @@ public class CreateEmployeeController {
             textField.getValidators().add(requiredFieldValidator);
         }
 
-        // Minimum length validator
-        ValidatorBase min3LengthValidator = new ValidatorBase() {
-            @Override
-            protected void eval() {
-                TextInputControl control = (TextInputControl) srcControl.get();
-                hasErrors.set(control.getText() == null || control.getText().length() < 3);
-            }
-        };
-        min3LengthValidator.setMessage("Minimum of 3 characters");
-        usernameTextField.getValidators().add(min3LengthValidator);
-        passwordTextField.getValidators().add(min3LengthValidator);
-
-        // Email validator
-        emailAddressTextField.getValidators().add(new EmailValidator());
-
-        // Mobile number validator
-        mobileNumberTextField.getValidators().add(new MobileNumberValidator());
     }
 
     private void addFormatters() {

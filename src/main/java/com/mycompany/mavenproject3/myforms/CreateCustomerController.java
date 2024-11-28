@@ -3,15 +3,12 @@ package com.mycompany.mavenproject3.myforms;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
-import com.jfoenix.validation.base.ValidatorBase;
 import com.mycompany.mavenproject3.interfaces.Refreshable;
 import com.mycompany.mavenproject3.models.Barangay;
 import com.mycompany.mavenproject3.models.DbHelper;
 import com.mycompany.mavenproject3.models.Municipality;
 import com.mycompany.mavenproject3.models.Province;
 import com.mycompany.mavenproject3.utils.TextFormatterUtil;
-import com.mycompany.mavenproject3.validators.EmailValidator;
-import com.mycompany.mavenproject3.validators.MobileNumberValidator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,6 +22,7 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
+
 
 public class CreateCustomerController {
     Stage stage;
@@ -63,11 +61,6 @@ public class CreateCustomerController {
         addValidators();
         addFormatters();
 
-        // Email validator
-        emailAddressTextField.getValidators().add(new EmailValidator());
-
-        // Mobile number validator
-        mobileNumberTextField.getValidators().add(new MobileNumberValidator());
     }
 
     private void addFormatters() {

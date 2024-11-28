@@ -28,12 +28,12 @@
                   <Font name="System Bold Italic" size="28.0" />
                </font>
             </Text>
-            <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="206.0" promptText="Username" text="naoki">
+            <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="206.0" promptText="Username">
                <VBox.margin>
                   <Insets bottom="10.0" top="15.0" />
                </VBox.margin>
             </TextField>
-            <TextField fx:id="passwordField" prefHeight="26.0" prefWidth="206.0" promptText="Password" text="qqq">
+            <TextField fx:id="passwordField" prefHeight="26.0" prefWidth="206.0" promptText="Password">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>

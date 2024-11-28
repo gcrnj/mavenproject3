@@ -5,7 +5,6 @@ module com.mycompany.mavenproject3 {
     requires com.jfoenix; // Add this line to include JFoenix
     requires atlantafx.base;
     requires org.controlsfx.controls;
-    requires java.desktop;
 
     opens com.mycompany.mavenproject3 to javafx.fxml;
     exports com.mycompany.mavenproject3;
